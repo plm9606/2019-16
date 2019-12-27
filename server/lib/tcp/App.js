@@ -36,7 +36,7 @@ class App extends TcpServer {
 
   async onRead(socket, data) {
     if (!isLogService(this.context.name) && data.hasOwnProperty("nextQuery")) {
-      const spanId = await this.sendTcpLog(data.nextQuery);
+      const spanId = await this.sendTcpLog(data);
 
       data.spanId = spanId;
     }
@@ -56,21 +56,23 @@ class App extends TcpServer {
       data.info
     );
 
-    if (data.curQuery === data.endQuery) {
+    if (data.method == "ERROR") {
+      this.ApiGateway.write(packet);
+    } else if (data.curQuery === data.endQuery) {
       this.ApiGateway.write(packet);
     } else {
       appClient.write(packet);
     }
     if (!isLogService(data.info.name) && data.spanId) {
       if (isErrorPacket(data.method)) {
-        await this.sendTcpLog(data.curQuery, {
+        await this.sendTcpLog(data, {
           spanId: data.spanId,
           error: data.method,
           errorMsg: data.body.msg
         });
         return;
       }
-      await this.sendTcpLog(data.curQuery, { spanId: data.spanId });
+      await this.sendTcpLog(data, { spanId: data.spanId });
     }
   }
 
