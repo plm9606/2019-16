@@ -19,4 +19,3 @@ do
 		pm2 start $path --name $name
 	fi
 done
-

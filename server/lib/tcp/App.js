@@ -1,6 +1,6 @@
 const TcpServer = require("./tcpServer");
 const TcpClient = require("./tcpClient");
-const { makePacket } = require("../tcp/util");
+const { makePacket, isLogService, isErrorPacket } = require("../tcp/util");
 const { getAppbyName, getAllApps, popMessageQueue } = require("../redis");
 const { makeLogSender } = require("./logUtils");
 
@@ -14,18 +14,19 @@ class App extends TcpServer {
     this.appClients = {};
     this.ApiGateway = this.connectToApiGateway();
 
-    this.tcpLogSender = makeLogSender.call(this, "tcp");
+    this.sendTcpLog = makeLogSender.call(this, "tcp");
     (async () => {
+      if (isLogService(name)) return;
       await new Promise(res => this.connectToLogService(res));
-      this.doMessageJob(job);
+      this.doMessageJob();
     })();
   }
 
-  async doMessageJob(job) {
+  async doMessageJob() {
     const packets = await popMessageQueue(this.context.name, 1000);
 
     if (!Array.isArray(packets)) {
-      job.bind(this)({}, JSON.parse(packets));
+      this.job({}, JSON.parse(packets));
     } else {
       packets.forEach(packet => {
         this.job({}, JSON.parse(packet));
@@ -34,13 +35,20 @@ class App extends TcpServer {
   }
 
   async onRead(socket, data) {
+    if (!isLogService(this.context.name) && data.hasOwnProperty("nextQuery")) {
+      const spanId = await this.sendTcpLog(data.nextQuery);
+
+      data.spanId = spanId;
+    }
+
     this.job(socket, data);
   }
 
-  send(appClient, data) {
+  async send(appClient, data) {
     const packet = makePacket(
       data.method,
       data.curQuery,
+      data.nextQuery,
       data.endQuery,
       data.params,
       data.body,
@@ -48,17 +56,21 @@ class App extends TcpServer {
       data.info
     );
 
-    /**
-     * params
-     * @param {string} query : 서비스의 쿼리
-     * @param {object} parentData : 해당 서비스를 호출한 서비스 정보
-     */
-    this.tcpLogSender = makeLogSender.call(this, "tcp");
-
     if (data.curQuery === data.endQuery) {
       this.ApiGateway.write(packet);
     } else {
       appClient.write(packet);
+    }
+    if (!isLogService(data.info.name) && data.spanId) {
+      if (isErrorPacket(data.method)) {
+        await this.sendTcpLog(data.curQuery, {
+          spanId: data.spanId,
+          errors: data.method,
+          errorMsg: data.body.msg
+        });
+        return;
+      }
+      await this.sendTcpLog(data.curQuery, { spanId: data.spanId });
     }
   }
 
@@ -83,7 +95,7 @@ class App extends TcpServer {
       this.appClients[name] = client;
       return client;
     } catch (e) {
-      return e;
+      throw new Error(e);
     }
   }
 
@@ -93,7 +105,7 @@ class App extends TcpServer {
 
       return apps;
     } catch (e) {
-      return e;
+      throw new Error(e);
     }
   }
 
@@ -106,6 +118,7 @@ class App extends TcpServer {
         this.isConnectToAppListManager = true;
         const packet = makePacket(
           "POST",
+          this.name,
           "add",
           "add",
           {},

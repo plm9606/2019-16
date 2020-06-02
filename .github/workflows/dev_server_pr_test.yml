@@ -1,69 +1,23 @@
-# 서비스 브랜치에 PR을 보낼 경우 해당 서비스만 테스트를 실행한다.
-name: PR Test [Service]
+name: PR Test [Develop]
 
 on:
   pull_request:
     types: [opened, reopened]
     branches:
-      # - app/*
-      - service/*
+      - develop/server
 
 jobs:
   TestService:
-    name: Test Current Service
+    name: Test All Services
     runs-on: [ubuntu-latest]
     steps:
       - name: checkout repo
         uses: actions/checkout@master
       - name: run test
         run: |
-          echo base_ref is ${{github.base_ref}}
-          echo head_ref is ${{github.head_ref}}
-          if [  ${{github.base_ref}} == "service/log" ]
-          then
-            cd server/services/log
-            npm install
-            npm test --detectOpenHandles --forceExit
-          elif [  ${{github.base_ref}} == "service/analytics" ]
-          then
-            cd server/services/analytics
-            npm install
-            npm test --detectOpenHandles --forceExit
-          elif [  ${{github.base_ref}} == "service/reservation" ]
-          then
-            cd server/services/reservation
-            npm install
-            npm test --detectOpenHandles --forceExit
-          elif [  ${{github.base_ref}} == "service/search" ]
-          then
-            cd server/services/search
-            ifconfig
-            npm install
-            npm test --detectOpenHandles --forceExit
-          elif [  ${{github.base_ref}} == "service/study_room" ]
-          then
-            cd server/services/studyroom
-            npm install
-            npm test --detectOpenHandles --forceExit
-          elif [  ${{github.base_ref}} == "service/study_group" ]
-          then
-            cd server/services/studygroup
-            npm install
-            npm test --detectOpenHandles --forceExit
-          elif  [  ${{github.base_ref}} == "service/gateway" ]
-          then 
-            cd server/api-gateway
-            npm install
-            npm test --detectOpenHandles --forceExit
-          elif  [  ${{github.base_ref}} == "service/payment" ]
-          then 
-            cd server/services/payment
-            npm install
-            npm test --detectOpenHandles --forceExit
-          else
-            echo Err:Nothing match with your service branch
-            return 0
-          fi
+          cd server
+          npm install
+          npm test --detectOpenHandles --forceExit
         env:
           GATEWAY_NAME: apigateway
           GATEWAY_HOST: 127.0.0.1
@@ -77,7 +31,6 @@ jobs:
           SEARCH_ELASTIC_HOST: 106.10.41.25
           SEARCH_ELASTIC_PORT: 9200
           SEARCH_INDEX_STUDYGROUP: test
-          SEARCH_INDEX_QUERY: suggestedquery
           STUDYGROUP_NAME: studygroup
           STUDYGROUP_HOST: 127.0.0.1
           STUDYGROUP_PORT: 8003
