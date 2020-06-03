@@ -9,7 +9,8 @@
     "eslint-config-prettier": "^6.7.0",
     "jest": "^24.9.0",
     "mongoose": "^5.7.12",
-    "redis": "^2.8.0"
+    "redis": "^2.8.0",
+    "studygroup": "file:services/studygroup"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.6.1",
