@@ -15,10 +15,10 @@ const {
 
 const {
   AWS_ACCESS_KEY: accessKeyId,
-  AWS_SECRET_KEY: secretAccessKey
+  AWS_SECRET_KEY: secretAccessKey,
+  AWS_BUCKET_NAME: bucketName
 } = process.env;
 
-const bucketName = "studycombined";
 const {
   bucketLink,
   S3: studyCombinedStorage
@@ -28,12 +28,17 @@ const {
   bucketName
 );
 
-module.exports = function(apiGateway) {
+module.exports = function (apiGateway) {
   router.post(
     "/register",
     upload.single("image"),
     registerValidation,
-    uploadToImage(studyCombinedStorage, "groupImage", bucketName, bucketLink),
+    uploadToImage(
+      studyCombinedStorage,
+      "studycombined",
+      bucketName,
+      bucketLink
+    ),
     sendGroupCreationPacket(apiGateway)
   );
 
