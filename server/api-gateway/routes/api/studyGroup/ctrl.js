@@ -22,7 +22,7 @@ exports.uploadToImage = (storage, path, bucketName, bucketLink) => async (
 
   if (!image && !thumbnail) {
     req.imageLink =
-      "https://kr.object.ncloudstorage.com/studycombined/groupImage/no_img.png";
+      "https://cgv-clone-build.s3.ap-northeast-2.amazonaws.com/studycombined/no_image.png";
     next();
     return;
   }
