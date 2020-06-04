@@ -1,19 +1,12 @@
 const AWS = require("aws-sdk");
 
-module.exports = function(accessKeyId, secretAccessKey, bucketName) {
-  const endpoint = new AWS.Endpoint("https://kr.object.ncloudstorage.com");
-  const region = "kr-standard";
-
-  const bucketLink = `https://kr.object.ncloudstorage.com/${bucketName}/`;
-
-  AWS.config.update({
-    accessKeyId,
-    secretAccessKey
-  });
+module.exports = function (accessKeyId, secretAccessKey, bucketName) {
+  const bucketLink = `https://${bucketName}.s3.ap-northeast-2.amazonaws.com/`;
 
   const S3 = new AWS.S3({
-    endpoint,
-    region
+    accessKeyId,
+    secretAccessKey,
+    region: "ap-northeast-2"
   });
 
   return { bucketLink, S3 };
