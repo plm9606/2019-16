@@ -110,7 +110,7 @@ const Reservation = ({ match }) => {
 
       return marker;
     });
-    debugger;
+
     clusterer.addMarkers(markers);
     map.setBounds(bounds);
   };
@@ -120,8 +120,17 @@ const Reservation = ({ match }) => {
       .get(`${REQUEST_URL}/api/studygroup/detail/${id.current}`)
       .then(({ data }) => {
         const groupInfo = data.detailInfo;
-        const { location, now_personnel, startTime, endTime, days } = groupInfo;
+        const {
+          _id,
+          location,
+          now_personnel,
+          startTime,
+          endTime,
+          days
+        } = groupInfo;
+        const groupId = _id;
         const reservationDays = convertDatesFormat(days, startTime, endTime);
+
         setLocation({ lat: location.lat, lon: location.lon });
 
         const requestBody = {
@@ -149,7 +158,8 @@ const Reservation = ({ match }) => {
                 startTime,
                 endTime,
                 days,
-                dates: reservationDays
+                dates: reservationDays,
+                groupId
               };
               resolve({ timeInfo, availableRooms: result.data });
             });
