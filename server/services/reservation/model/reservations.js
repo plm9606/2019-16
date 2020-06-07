@@ -9,7 +9,7 @@ const ReservationsSchema = new Schema({
   studyRoom: StudyRoomSchema,
   dates: [
     {
-      reservedDate: Date,
+      date: Date,
       start: Number,
       end: Number
     }
