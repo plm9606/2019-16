@@ -174,14 +174,12 @@ class App extends TcpServer {
         this.isConnectedToLogService = false;
       },
       () => {
-        // console.log(`logService is down`);
         this.isConnectedToLogService = false;
       }
     );
 
     setInterval(() => {
       if (!this.isConnectedToLogService) {
-        // console.log(`try connect to LogService`);
         this.logService.connect();
       }
     }, 1000);
