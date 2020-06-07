@@ -17,9 +17,10 @@ const Section = styled.section`
   }
 `;
 
-const Payment = ({ location }) => {
+const Payment = ({ match, location }) => {
   const [loading, setLoading] = useState(true);
   const [receipt, setReceipt] = useState({});
+  const { groupId } = match.params;
 
   async function fetchReceipt() {
     const url = `${REQUEST_URL}/api${location.pathname}${location.search}`;

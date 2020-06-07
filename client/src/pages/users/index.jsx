@@ -126,7 +126,7 @@ const UserPage = () => {
           <Route path="/reservation/:id" component={Reservation} />
           <Route path="/search/tags" component={Search} />
           <Route path="/search" component={Search} />
-          <Route path="/payment" component={Payment} />
+          <Route path="/payment/:groupId" component={Payment} />
         </Switch>
       </div>
       <Switch>
