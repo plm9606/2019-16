@@ -76,7 +76,7 @@
     ></script>
     <script>
       async function getStudyGroupInfoById(id) {
-        const url = `https://studycombined.shop:8000/api/studygroup/detail/${id}`;
+        const url = `https://localhost:8000/api/studygroup/detail/${id}`; //`https://studycombined.shop:8000/api/studygroup/detail/${id}`;
         const options = {
           method: "GET",
           mode: "cors",
@@ -97,7 +97,7 @@
       }
 
       async function getStudyRoomInfoById(id) {
-        const url = `https://studycombined.shop:8000/api/studyroom/${id}`;
+        const url = `https://localhost:8000/api/studyroom/${id}`; //`https://studycombined.shop:8000/api/studyroom/${id}`;
         const options = {
           method: "GET",
           mode: "cors",
@@ -144,7 +144,7 @@
         parsedInfo.reservationInfo.studyRoomInfo = studyRoomInfo;
 
         const data = JSON.stringify(parsedInfo);
-        const url = "https://studycombined.shop:8000/api/payment/ready";
+        const url = 'https://localhost:8000/api/reservation/ready'; //"https://studycombined.shop:8000/api/payment/ready";
         const options = {
           method: "POST",
           headers: {
@@ -160,7 +160,7 @@
           alert("같은 스터디룸에 대해서 다른 결제가 진행중입니다.");
           return;
         }
-        const { nextUrl } = await res.json();
+        const nextUrl = `https://localhost:3000/payment/${studyGroupInfo._id}`; //await res.json();
         window.location.href = nextUrl;
       }
     </script>
