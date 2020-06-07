@@ -23,9 +23,9 @@ exports.filterStudyGroup = async ({ studyGroup, studyRooms }) => {
 
   const reservatedInfo = await Reservations.find(query);
 
-  const reservatedId = reservatedInfo.map(info => info.studyRoom.id);
+  const reservatedId = reservatedInfo.map((info) => info.studyRoom.id);
   const filterdRooms = studyRooms.filter(
-    room => !reservatedId.includes(room._id)
+    (room) => !reservatedId.includes(room._id)
   );
 
   return {
@@ -41,13 +41,18 @@ exports.filterStudyGroup = async ({ studyGroup, studyRooms }) => {
 
 exports.addReservation = async ({ reservationInfo, userId }) => {
   // 데이터베이스에 저장
+  Reservations.create({
+    studyGroup: reservationInfo.studyGroupInfo,
+    studyRoom: reservationInfo.studyRoomInfo,
+    dates: reservationInfo.dates
+  });
 
   return {
     headers: {
       method: "REPLY",
       curQuery: "addReservation",
-      nextQuery: "removeInQueue",
-      params: { roomId: reservationInfo.roomId, userId }
+      nextQuery: "apigateway",
+      params: {}
     },
     body: {}
   };
