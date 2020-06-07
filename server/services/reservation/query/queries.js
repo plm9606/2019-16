@@ -1,4 +1,5 @@
 const Reservations = require("../model/reservations");
+const moment = require("moment");
 
 exports.filterStudyGroup = async ({ studyGroup, studyRooms }) => {
   const orArray = studyGroup.dates.reduce((acc, date) => {
@@ -11,7 +12,7 @@ exports.filterStudyGroup = async ({ studyGroup, studyRooms }) => {
           end: {
             $gt: date.start
           },
-          reservedDate: new Date(date.date)
+          date: moment(date.date).toISOString()
         }
       }
     });
