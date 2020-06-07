@@ -16,26 +16,18 @@ const ReservationInfo = ({ info }) => {
           <thead>
             <tr>
               <th>No.</th>
-              <th>날짜</th>
-              <th>시작하는 시간</th>
-              <th>끝나는 시간</th>
+              <th>모임 날짜</th>
+              <th>시작 시간</th>
+              <th>종료 시간</th>
             </tr>
           </thead>
-          <tfoot>
-            <tr>
-              <th>No.</th>
-              <th>날짜</th>
-              <th>시작하는 시간</th>
-              <th>끝나는 시간</th>
-            </tr>
-          </tfoot>
           <tbody>
-            {reservationDays(info).map((date, index) => (
+            {info.map((date, index) => (
               <tr>
                 <td>{index + 1}</td>
                 <td>{date.date.split("T")[0]}</td>
-                <td>{date.start[0]}시</td>
-                <td>{date.end[0]}시</td>
+                <td>{date.start}시</td>
+                <td>{date.end}시</td>
               </tr>
             ))}
           </tbody>

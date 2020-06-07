@@ -23,17 +23,20 @@ const Payment = ({ match, location }) => {
   const { groupId } = match.params;
 
   async function fetchReceipt() {
-    const url = `${REQUEST_URL}/api${location.pathname}${location.search}`;
+    const url = `${REQUEST_URL}/api/reservation/${groupId}`;
     const options = {
       method: "GET",
       mode: "cors",
-      credentials: "include"
+      credentials: "include",
     };
     const response = await fetch(url, options);
 
     if (response.ok) {
       const result = await response.json();
-      setReceipt(result);
+      if (result.length == 1) {
+        setReceipt(result[0]);
+      } else {
+      }
     }
   }
 
@@ -50,7 +53,7 @@ const Payment = ({ match, location }) => {
       {loading ? (
         <Loading type="spokes" color="#F6538B" />
       ) : (
-        <Receipt reservationInfo={receipt.reservationInfo} />
+        <Receipt reservationInfo={receipt} />
       )}
     </div>
   );

@@ -18,8 +18,8 @@ const Receipt = ({ reservationInfo }) => {
         </div>
       </section>
       <Body>
-        <ReservationInfo info={reservationInfo} />
-        <StudyroomInfo info={reservationInfo.location} />
+        <ReservationInfo info={reservationInfo.dates} />
+        <StudyroomInfo info={reservationInfo} />
       </Body>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <button
