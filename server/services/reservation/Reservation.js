@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const App = require("../../lib/tcp/App");
-const { filterStudyGroup, addReservation } = require("./query/queries");
+const {
+  filterStudyGroup,
+  addReservation,
+  findByGroupId
+} = require("./query/queries");
 
 const { RESERVATIONS_MONGO_URL } = process.env;
 
@@ -13,13 +17,14 @@ mongoose
   .then(() => {
     console.log("Rservation mongoDB is connected");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log("Rservation mongoDB connection fail", err);
   });
 
 const queryMap = {
   filterStudyGroup,
-  addReservation
+  addReservation,
+  findByGroupId
 };
 
 async function doJob(socket, data) {

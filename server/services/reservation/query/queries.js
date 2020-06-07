@@ -1,5 +1,6 @@
 const Reservations = require("../model/reservations");
 const moment = require("moment");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 exports.filterStudyGroup = async ({ studyGroup, studyRooms }) => {
   const orArray = studyGroup.dates.reduce((acc, date) => {
@@ -56,5 +57,20 @@ exports.addReservation = async ({ reservationInfo, userId }) => {
       params: {}
     },
     body: {}
+  };
+};
+
+exports.findByGroupId = async ({ groupId }) => {
+  const query = { "studyGroup._id": new ObjectId(groupId) };
+  const groupReservation = await Reservations.find(query);
+
+  return {
+    headers: {
+      method: "REPLY",
+      curQuery: "findByGroupId",
+      nextQuery: "apigateway",
+      params: {}
+    },
+    body: groupReservation
   };
 };
