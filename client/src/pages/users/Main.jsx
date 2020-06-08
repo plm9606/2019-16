@@ -109,7 +109,7 @@ const MainPage = ({ history, location }) => {
   const { searchList } = userIndexState;
   const { userId, userLocation, ownGroups, joiningGroups } = userInfo;
 
-  const { lat, lon } = userLocation;
+  const { lat, lon } = { lat: "37.497115", lon: "127.028621" }; //userLocation;
 
   let { loading, data, error, request } = getApiAxiosState;
 
