@@ -28,27 +28,11 @@ const CustomOverlay = ({ marker, data }) => {
   function closeOverlay() {
     overlay.setMap(null);
   }
-
-  const paymentInfo = {
-    cid: "TC0ONETIME",
-    partner_order_id: partner_id + new Date().toString(),
-    partner_user_id: partner_id,
-    item_name: `${cafe_name} - ${name}`,
-    quantity: 1,
-    total_amount: price,
-    tax_free_amount: 0,
-    approval_url: `${REQUEST_URL}/api/payment/approval/${roomId}/${userId}`,
-    cancel_url: `${REQUEST_URL}/api/payment/cancel/${roomId}/${userId}`,
-    fail_url: `${REQUEST_URL}/api/payment/fail/${roomId}/${userId}`
-    // approval_url: `http://localhost:3000/payment/approval/${roomId}/${userId}`,
-    // cancel_url: `http://localhost:3000/payment/cancel/${roomId}/${userId}`,
-    // fail_url: `http://localhost:3000/payment/fail/${roomId}/${userId}`
-  };
   const reservationInfo = {
     days,
     roomId,
     dates,
-    groupId
+    groupId,
   };
   reservationInfo.startTime = [];
   reservationInfo.endTime = [];
@@ -57,7 +41,7 @@ const CustomOverlay = ({ marker, data }) => {
     reservationInfo.endTime.push(endTime);
   });
 
-  const info = { userId, paymentInfo, reservationInfo };
+  const info = { userId, reservationInfo };
   const eleInfo = JSON.stringify(info);
 
   return (
@@ -90,4 +74,5 @@ const CustomOverlay = ({ marker, data }) => {
     </div>
   );
 };
+
 export default CustomOverlay;
