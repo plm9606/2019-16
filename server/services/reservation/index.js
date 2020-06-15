@@ -11,7 +11,7 @@ const reservation = new Reservation(
 );
 
 let tryConnect = setInterval(() => {
-  connectToService.bind(reservation)("user");
+  connectToService.bind(reservation)("studygroup");
 }, 1000);
 
 async function connectToService(name) {

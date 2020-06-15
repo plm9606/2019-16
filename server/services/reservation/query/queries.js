@@ -53,11 +53,14 @@ exports.addReservation = async function ({ reservationInfo, userId }) {
     headers: {
       method: "PUT",
       curQuery: "addReservation",
-      nextQuery: "addUserHistory",
-      params: {}
+      nextQuery: "updateGroupReserved",
+      params: {
+        reservationId,
+        studyGroupId: reservationInfo.studyGroupInfo._id
+      }
     },
-    body: { members: reservationInfo.studyGroupInfo.members, reservationId },
-    appClient: this.appClients.user
+    body: {},
+    appClient: this.appClients.studygroup,
   };
 };
 
