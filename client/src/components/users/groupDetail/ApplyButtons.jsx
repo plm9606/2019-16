@@ -27,7 +27,8 @@ const ApplyButtons = ({
     leader,
     now_personnel,
     max_personnel,
-    min_personnel
+    min_personnel,
+    isReserved,
   } = groupData;
 
   const { userInfo } = useContext(UserContext);
@@ -95,6 +96,12 @@ const ApplyButtons = ({
   return (
     <StyledApplyButtons>
       {(() => {
+        if (isReserved)
+          return (
+            <button className="button is-danger" disabled="true">
+              모집 마감 - 예약완료
+            </button>
+          );
         switch (memberType) {
           case "searcher":
             return (
