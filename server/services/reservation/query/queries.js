@@ -2,7 +2,7 @@ const Reservations = require("../model/reservations");
 const moment = require("moment");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-exports.filterStudyGroup = async ({ studyGroup, studyRooms }) => {
+exports.filterStudyGroup = async function ({ studyGroup, studyRooms }) {
   const orArray = studyGroup.dates.reduce((acc, date) => {
     acc.push({
       dates: {
@@ -41,9 +41,9 @@ exports.filterStudyGroup = async ({ studyGroup, studyRooms }) => {
   };
 };
 
-exports.addReservation = async ({ reservationInfo, userId }) => {
+exports.addReservation = async function ({ reservationInfo, userId }) {
   // 데이터베이스에 저장
-  Reservations.create({
+  const reservationId = await Reservations.create({
     studyGroup: reservationInfo.studyGroupInfo,
     studyRoom: reservationInfo.studyRoomInfo,
     dates: reservationInfo.dates
@@ -60,7 +60,7 @@ exports.addReservation = async ({ reservationInfo, userId }) => {
   };
 };
 
-exports.findByGroupId = async ({ groupId }) => {
+exports.findByGroupId = async function ({ groupId }) {
   const query = { "studyGroup._id": new ObjectId(groupId) };
   const groupReservation = await Reservations.find(query);
 

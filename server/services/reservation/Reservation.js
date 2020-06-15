@@ -31,12 +31,14 @@ async function doJob(socket, data) {
   const { params, nextQuery } = data;
   let headers;
   let body;
+  let appClient;
 
   try {
-    let result = await queryMap[nextQuery](params);
+    let result = await queryMap[nextQuery].call(this, params);
 
     headers = result.headers;
     body = result.body;
+    appClient = result.appClient ? result.appClient : {};
   } catch (e) {
     headers = {
       method: "ERROR",
@@ -53,10 +55,8 @@ async function doJob(socket, data) {
       body,
       info: this.context
     };
-    let appClient = {};
-
-    if (replyData.nextQuery === "removeInQueue")
-      appClient = this.appClients.payment;
+    // if (replyData.nextQuery === "removeInQueue")
+    //   appClient = this.appClients.payment;
 
     this.send(appClient, replyData);
   }
