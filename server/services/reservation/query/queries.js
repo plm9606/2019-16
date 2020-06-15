@@ -51,12 +51,13 @@ exports.addReservation = async function ({ reservationInfo, userId }) {
 
   return {
     headers: {
-      method: "REPLY",
+      method: "PUT",
       curQuery: "addReservation",
-      nextQuery: "apigateway",
+      nextQuery: "addUserHistory",
       params: {}
     },
-    body: {}
+    body: { members: reservationInfo.studyGroupInfo.members, reservationId },
+    appClient: this.appClients.user
   };
 };
 
