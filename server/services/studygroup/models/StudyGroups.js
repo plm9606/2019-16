@@ -1,5 +1,6 @@
 const { Schema, model, Types } = require("mongoose");
 const User = require("./Users").schema;
+const ObjectId = Schema.Types.ObjectId;
 
 const GroupSchema = new Schema({
   title: { type: String, required: true },
@@ -20,7 +21,9 @@ const GroupSchema = new Schema({
   tags: { type: [String] },
   days: { type: [Number] },
   startTime: { type: Number },
-  endTime: { type: Number }
+  endTime: { type: Number },
+  isReserved: { type: Boolean, default: false },
+  reservationId: { type: ObjectId }
 });
 
 module.exports = model("StudyGroup", GroupSchema);

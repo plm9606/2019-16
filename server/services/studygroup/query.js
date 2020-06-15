@@ -4,6 +4,7 @@ const {
   removeStudyGroup,
   updateStudyGroup
 } = require("../../lib/redis/studygroup");
+const mongoose = require("mongoose");
 
 exports.addGroup = async params => {
   const groupInfo = params;
@@ -117,7 +118,23 @@ exports.toggleRecruitment = async params => {
 
       return { status: 200 };
     })
-    .catch(err => {
+    .catch((err) => {
       throw new Error(err);
     });
+};
+
+exports.updateGroupReserved = async (params) => {
+  const { reservationId, studyGroupId } = params;
+  const query = {
+    $set: {
+      isReserved: true,
+      reservationId: mongoose.Types.ObjectId(reservationId._id)
+    }
+  };
+  const res = await StudyGroups.updateOne(
+    { _id: mongoose.Types.ObjectId(studyGroupId) },
+    query
+  );
+
+  return { status: 200 };
 };

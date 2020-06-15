@@ -17,6 +17,9 @@ const doAndResponse = async (params, packetData, cb) => {
     if (replyData.curQuery === "removeGroup") {
       replyData.nextQuery = "deleteGroupInUsers";
     }
+    if (replyData.curQuery === "updateGroupReserved") {
+      replyData.nextQuery = "apigateway";
+    }
     replyData.method = "REPLY";
     replyData.body = result;
 
