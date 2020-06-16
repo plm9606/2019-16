@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { UserContext } from "../../../pages/users";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
+import { Link } from "react-router-dom";
 
 const StyledUserInfo = styled.div`
   display: flex;
@@ -26,6 +27,11 @@ const UserInfo = () => {
 
   return (
     <StyledUserInfo>
+      <div>
+        <Link to="/mypage">
+          <span class="tag is-white">마이페이지</span>
+        </Link>
+      </div>
       {userInfo.userEmail ? (
         <>
           <img
@@ -34,7 +40,6 @@ const UserInfo = () => {
             className="profile-image"
           />
           <div className="right-block">
-            {/* <span>{userInfo.userName}님 반갑습니다.</span> */}
             <LogoutButton />
           </div>
         </>

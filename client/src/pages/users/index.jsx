@@ -18,6 +18,7 @@ import MainPage from "./Main";
 import GroupCreatePage from "./groupCreate";
 import GroupUpdatePage from "./groupUpdate";
 import GroupDetailPage from "./groupDetail";
+import Mypage from "./mypage";
 import { Header } from "../../components/users/Header";
 import ReservationHeader from "../../components/users/ReservationHeader";
 import Footer from "../../components/Footer";
@@ -127,6 +128,7 @@ const UserPage = () => {
           <Route path="/search/tags" component={Search} />
           <Route path="/search" component={Search} />
           <Route path="/payment/:groupId" component={Payment} />
+          <Route path="/mypage" component={Mypage} />
         </Switch>
       </div>
       <Switch>
