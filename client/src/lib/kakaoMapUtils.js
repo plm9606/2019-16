@@ -56,4 +56,27 @@ function setHoverImage(marker, data, selectedMarker, currentOverlay, map) {
   }
 }
 
-export { makeOverlay, markerImage, hoverImage, mapOptions, setHoverImage };
+function coordToAddress(y, x) {
+  const geocoder = new window.kakao.maps.services.Geocoder();
+  const coord = new window.kakao.maps.LatLng(x, y);
+
+  return new Promise((res, rej) => {
+    const callback = function (result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+        res(result);
+      } else {
+        rej(status);
+      }
+    };
+    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+  });
+}
+
+export {
+  makeOverlay,
+  markerImage,
+  hoverImage,
+  mapOptions,
+  setHoverImage,
+  coordToAddress,
+};
