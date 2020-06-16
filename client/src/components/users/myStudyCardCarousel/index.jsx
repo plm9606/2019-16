@@ -5,7 +5,7 @@ import { UserContext } from "../../../pages/users/index";
 import bulmaCarousel from "bulma-carousel/dist/js/bulma-carousel.min.js";
 
 const StyledMyStudyCarousel = styled.div`
-width: ${props => props.carouselWidth}; 
+width: ${(props) => props.carouselWidth}; 
     overflow:hidden;
 
     .carousel{
@@ -45,7 +45,7 @@ const MyStudyCarousel = () => {
       bulmaCarousel.attach(".carousel", {
         slidesToScroll: 1,
         slidesToShow: 3,
-        infinite: true
+        infinite: true,
       });
     }
   }, []);
@@ -55,7 +55,7 @@ const MyStudyCarousel = () => {
       <div>
         <div className="my-group-title">👨‍👨‍👧‍👦현재 함께하는 그룹이에요</div>
         <div className="carousel">
-          {userGroups.map(groupData => {
+          {userGroups.map((groupData) => {
             return (
               <div className="carousel-item">
                 <StudyGroupCardMini groupData={groupData} />

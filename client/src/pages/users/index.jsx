@@ -4,7 +4,7 @@ import React, {
   useState,
   useReducer,
   createContext,
-  useRef
+  useRef,
 } from "react";
 import { Route, Switch } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -33,12 +33,12 @@ export const UserContext = createContext();
 
 const getCurrentPosition = new Promise((resolve, reject) => {
   navigator.geolocation.getCurrentPosition(
-    pos => {
+    (pos) => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
       resolve({ lat, lon });
     },
-    err => reject(err)
+    (err) => reject(err)
   );
 });
 
@@ -51,12 +51,12 @@ const UserPage = () => {
     userAgeRange: null,
     userGender: "",
     profileImage: "",
-    userLocation: { lat: null, lon: null }
+    userLocation: { lat: null, lon: null },
   });
   const [pageNationState, setPageNationState] = useState({
     page_idx: 1,
     category: null,
-    isLastItem: false
+    isLastItem: false,
   });
   const getApiAxiosState = useAxios(apiAxios);
   const [userIndexState, userIndexDispatch] = useReducer(
@@ -78,19 +78,19 @@ const UserPage = () => {
       const options = { method: "GET", mode: "cors", credentials: "include" };
 
       fetch(url, options)
-        .then(r => {
+        .then((r) => {
           if (r.ok) return r.json();
 
           alert("로그인 오류 입니다");
           window.location.href = "/";
         })
-        .then(result => {
+        .then((result) => {
           setUserInfo(result);
         })
         .catch(console.error);
     } else {
       getCurrentPosition
-        .then(pos => {
+        .then((pos) => {
           const { lat, lon } = pos;
 
           setUserInfo({ ...userInfo, userLocation: { lat, lon } });
@@ -111,7 +111,7 @@ const UserPage = () => {
         setPageNationState,
         groupInBooking,
         setgroupInBooking,
-        map
+        map,
       }}
     >
       <div className="app-wrapper">

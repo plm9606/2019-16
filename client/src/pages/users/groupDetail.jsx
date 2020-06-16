@@ -56,7 +56,6 @@ const GroupDetail = ({ match, history }) => {
 
   useEffect(() => {
     id && request("get", `/studygroup/detail/${id}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {

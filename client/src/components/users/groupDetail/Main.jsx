@@ -7,7 +7,7 @@ import TagButtons from "../common/TagButtons";
 import ApplyButtons from "../groupDetail/ApplyButtons";
 import {
   toggle_recruit,
-  toggle_registeration
+  toggle_registeration,
 } from "../../../reducer/users/groupDetail";
 
 const StyledMain = styled.div`
@@ -68,14 +68,14 @@ const Main = ({ groupData, dispatch, history }) => {
     subtitle,
     min_personnel,
     now_personnel,
-    max_personnel
+    max_personnel,
   } = groupData;
 
-  const onToggleReservation = useCallback(isRecruiting => {
+  const onToggleReservation = useCallback((isRecruiting) => {
     dispatch(toggle_recruit(isRecruiting));
   }, []);
 
-  const onChangedNowPersonnel = useCallback(changedNowPersonnel => {
+  const onChangedNowPersonnel = useCallback((changedNowPersonnel) => {
     dispatch(toggle_registeration(changedNowPersonnel));
   }, []);
 
