@@ -16,8 +16,16 @@ class App extends TcpServer {
 
     this.sendTcpLog = makeLogSender.call(this, "tcp");
     (async () => {
+<<<<<<< HEAD
       if (isLogService(name)) return;
       await new Promise(res => this.connectToLogService(res));
+=======
+<<<<<<< HEAD
+=======
+      if (isLogService(name)) return;
+>>>>>>> origin/release
+      await new Promise((res) => this.connectToLogService(res));
+>>>>>>> fork/release
       this.doMessageJob();
     })();
   }
@@ -28,17 +36,28 @@ class App extends TcpServer {
     if (!Array.isArray(packets)) {
       this.job({}, JSON.parse(packets));
     } else {
-      packets.forEach(packet => {
+      packets.forEach((packet) => {
         this.job({}, JSON.parse(packet));
       });
     }
   }
 
   async onRead(socket, data) {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    if (Object.prototype.hasOwnProperty.call(data, "nextQuery")) {
+      this.sendTcpLog(data.nextQuery);
+=======
+>>>>>>> fork/release
     if (!isLogService(this.context.name) && data.hasOwnProperty("nextQuery")) {
       const spanId = await this.sendTcpLog(data.nextQuery);
 
       data.spanId = spanId;
+<<<<<<< HEAD
+=======
+>>>>>>> origin/release
+>>>>>>> fork/release
     }
 
     this.job(socket, data);
@@ -65,7 +84,11 @@ class App extends TcpServer {
       if (isErrorPacket(data.method)) {
         await this.sendTcpLog(data.curQuery, {
           spanId: data.spanId,
+<<<<<<< HEAD
           error: data.method,
+=======
+          errors: data.method,
+>>>>>>> fork/release
           errorMsg: data.body.msg
         });
         return;
@@ -174,14 +197,20 @@ class App extends TcpServer {
         this.isConnectedToLogService = false;
       },
       () => {
+<<<<<<< HEAD
         // console.log(`logService is down`);
+=======
+>>>>>>> fork/release
         this.isConnectedToLogService = false;
       }
     );
 
     setInterval(() => {
       if (!this.isConnectedToLogService) {
+<<<<<<< HEAD
         // console.log(`try connect to LogService`);
+=======
+>>>>>>> fork/release
         this.logService.connect();
       }
     }, 1000);
