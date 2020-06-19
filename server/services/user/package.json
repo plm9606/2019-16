@@ -1,19 +1,18 @@
 {
   "name": "user",
   "version": "1.0.0",
-  "description": "유저 서비스",
+  "description": "",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "jest"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "soob",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "jest": "^24.9.0",
-    "mongoose": "^5.8.1"
+    "mongoose": "^5.9.16"
+  },
+  "devDependencies": {
+    "jest": "^26.0.1"
   }
 }
