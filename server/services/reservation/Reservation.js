@@ -3,7 +3,8 @@ const App = require("../../lib/tcp/App");
 const {
   filterStudyGroup,
   addReservation,
-  findByGroupId
+  findByGroupId,
+  getHistoriesByIds
 } = require("./query/queries");
 
 const { RESERVATIONS_MONGO_URL } = process.env;
@@ -24,7 +25,8 @@ mongoose
 const queryMap = {
   filterStudyGroup,
   addReservation,
-  findByGroupId
+  findByGroupId,
+  getHistoriesByIds
 };
 
 async function doJob(socket, data) {
@@ -55,9 +57,9 @@ async function doJob(socket, data) {
       body,
       info: this.context
     };
+
     // if (replyData.nextQuery === "removeInQueue")
     //   appClient = this.appClients.payment;
-
     this.send(appClient, replyData);
   }
 }

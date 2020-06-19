@@ -78,3 +78,44 @@ exports.findByGroupId = async function ({ groupId }) {
     body: groupReservation
   };
 };
+
+exports.getHistoriesByIds = async function ({ groups }) {
+  const res = await Reservations.aggregate([
+    {
+      $match: {
+        "studyGroup._id": {
+          $in: groups.map((id) => new ObjectId(id))
+        }
+      }
+    },
+    {
+      $set: {
+        start: { $arrayElemAt: ["$dates", 0] },
+        end: { $arrayElemAt: ["$dates", -1] }
+      }
+    },
+    {
+      $project: {
+        "studyGroup._id": 1,
+        "studyGroup.title": 1,
+        "studyRoom.location": 1,
+        "studyGroup.thumbnail": 1,
+        startDate: "$start.date",
+        endDate: "$end.date",
+        startTime: "$start.start",
+        endTime: "$start.end"
+      }
+    },
+    { $sort: { startDate: -1 } }
+  ]).exec();
+
+  return {
+    headers: {
+      method: "REPLY",
+      curQuery: "getHistoriesByIds",
+      nextQuery: "apigateway",
+      params: {}
+    },
+    body: { history: res }
+  };
+};
