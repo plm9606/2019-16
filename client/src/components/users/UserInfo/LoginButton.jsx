@@ -5,7 +5,7 @@ import { UserContext } from "../../../pages/users";
 import { REQUEST_URL, KAKAO_JS_KEY } from "../../../config.json";
 import { set_my_group, set_join_group } from "../../../reducer/users/index";
 
-const DEFAULT_PROFILE_IMAGE = "/image/logo-mini/png";
+const DEFAULT_PROFILE_IMAGE = "/image/profile.jpg";
 
 const KakaoLoginButton = styled(KakaoLogin)`
   border-style: hidden;
@@ -16,7 +16,7 @@ const KakaoLoginButton = styled(KakaoLogin)`
   }
 `;
 
-const isNewCustomer = result => {
+const isNewCustomer = (result) => {
   if (result === null) return true;
   return false;
 };
@@ -37,10 +37,10 @@ const LoginButton = () => {
 
     if (isNewCustomer(getResult)) {
       let address;
-      const oncomplete = data => {
+      const oncomplete = (data) => {
         address = data.address;
       };
-      const onclose = state => {
+      const onclose = (state) => {
         if (state === "FORCE_CLOSE") {
           alert("필수 입력 사항입니다. 다시 로그인 해주세요");
           window.location.reload();
@@ -50,7 +50,7 @@ const LoginButton = () => {
             async (locationResult, locationStatus) => {
               const userLocation = {
                 lat: +locationResult[0].y,
-                lon: +locationResult[0].x
+                lon: +locationResult[0].x,
               };
               const url = `${REQUEST_URL}/auth/users/accounts`;
               const data = {
@@ -64,16 +64,16 @@ const LoginButton = () => {
                   : null,
                 profileImage:
                   profile.properties.profile_image || DEFAULT_PROFILE_IMAGE,
-                userLocation: userLocation
+                userLocation: userLocation,
               };
               const options = {
                 method: "POST",
                 headers: {
-                  "Content-Type": "application/json;charset=utf-8"
+                  "Content-Type": "application/json;charset=utf-8",
                 },
                 mode: "cors",
                 credentials: "include",
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
               };
 
               await fetch(url, options);
@@ -89,17 +89,17 @@ const LoginButton = () => {
       const options = {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json;charset=utf-8"
+          "Content-Type": "application/json;charset=utf-8",
         },
         mode: "cors",
         credentials: "include",
-        body: JSON.stringify({ kakaoAccessToken: response.access_token })
+        body: JSON.stringify({ kakaoAccessToken: response.access_token }),
       };
       const patchResult = await fetch(url, options);
       if (patchResult.ok) {
         setUserInfo({
           ...getResult,
-          ...{ kakaoAccessToken: response.access_token }
+          ...{ kakaoAccessToken: response.access_token },
         });
       }
     }
