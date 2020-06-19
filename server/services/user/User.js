@@ -5,7 +5,8 @@ const App = require("../../lib/tcp/App");
 const {
   updateJoiningGroups,
   updateOwnGroups,
-  deleteGroupInUsers
+  deleteGroupInUsers,
+  getUserHistoryAll
 } = require("./query/queries");
 
 const { ACCOUNTS_MONGO_URL } = process.env;
@@ -23,7 +24,12 @@ mongoose
     console.log("User mongoDB connection fail", err);
   });
 
-const queryMap = { updateJoiningGroups, updateOwnGroups, deleteGroupInUsers };
+const queryMap = {
+  updateJoiningGroups,
+  updateOwnGroups,
+  deleteGroupInUsers,
+  getUserHistoryAll
+};
 
 async function doJob(socket, data) {
   const { params, nextQuery } = data;
@@ -44,11 +50,14 @@ async function doJob(socket, data) {
       method,
       curQuery: nextQuery,
       params: params_,
-      body: result
+      ...result
     };
-    const appClient = {};
+    let appClient = {};
 
-    // this.send(appClient, replyData);
+    if (nextQuery === "getUserHistoryAll") {
+      appClient = this.appClients.reservation;
+    }
+    this.send(appClient, replyData);
   }
 }
 

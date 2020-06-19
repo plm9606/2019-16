@@ -52,3 +52,31 @@ exports.deleteGroupInUsers = async ({ group }) => {
     }
   );
 };
+
+exports.addUserHistory = async function ({ reservationInfo }) {
+  const { members, reservationId } = reservationInfo;
+
+  // update users reservation list
+
+  return {
+    headers: {
+      method: "REPLY",
+      curQuery: "addUserHistory",
+      nextQuery: "apigateway",
+      params: {}
+    },
+    body: {}
+  };
+};
+
+exports.getUserHistoryAll = async ({ userId }) => {
+  const res = await Users.findOne({ userId });
+
+  return {
+    method: "GET",
+    curQuery: "getUserHistoryAll",
+    nextQuery: "getHistoriesByIds",
+    params: { groups: res.groups },
+    body: {}
+  };
+};
