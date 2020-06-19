@@ -9,7 +9,11 @@ async function registerFirstTimeUser(req, res) {
   res
     .cookie("access_token", jwtGenerator({ id: data.userId, role: "user" }), {
       httpOnly: false,
+<<<<<<< HEAD
+      domain: "", // "studycombined.shop",
+=======
       domain: "studycombined.shop",
+>>>>>>> fork/release
       secure: true,
       maxAge: 24 * 60 * 60 * 1000 // 1일
     })

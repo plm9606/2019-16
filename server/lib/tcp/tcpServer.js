@@ -55,8 +55,6 @@ class TcpServer {
   onCreate(socket) {}
   onClose(socket) {}
   onRead(socket, data) {
-    console.log(data);
-
     socket.write(data);
   }
 }
