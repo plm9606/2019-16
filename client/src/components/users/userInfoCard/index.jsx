@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useReducer, useEffect, useCallback, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { UserContext } from "../../../pages/users";
+import { wrapper, coordToAddress } from "../../../lib/kakaoMapUtils";
+
 const StyledUserInfoCard = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,6 +15,9 @@ const StyledUserInfoCard = styled.div`
 
   .user-info {
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .name {
       font-family: "Recipekorea";
       font-weight: bold;
@@ -40,9 +45,32 @@ const StyledUserInfoCard = styled.div`
   }
 `;
 
-const UserInfoCard = ({ match, history }) => {
+const UserInfoCard = ({ userHistories }) => {
   const { userInfo } = useContext(UserContext);
-  const { userEmail, userName, profileImage, userLocation } = userInfo;
+  const {
+    userEmail,
+    userName,
+    profileImage,
+    userLocation,
+    joiningGroups,
+    ownGroups,
+  } = userInfo;
+
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    async function getAddress() {
+      if (userLocation.lat) {
+        const arr = await coordToAddress(userLocation.lon, userLocation.lat);
+        setAddress(
+          `${arr[0].address.region_1depth_name} ${arr[0].address.region_2depth_name} ${arr[0].address.region_3depth_name}`
+        );
+      }
+    }
+
+    getAddress();
+  }, [userLocation]);
+
   return (
     <StyledUserInfoCard>
       <div>
@@ -56,22 +84,25 @@ const UserInfoCard = ({ match, history }) => {
         <div className="name">{userName}</div>
         <ul>
           <li>{userEmail}</li>
-          <li>
-            내 지역: {userLocation.lat},{userLocation.lon}
-          </li>
+          <li>내 지역:{address} </li>
         </ul>
       </div>
       <div className="user-history-dashboard">
         <div className="history-card">
           <ul>
             <li className="subject">내가 참여한 스터디</li>
-            <li className="count">8개</li>
+            <li className="count">{userHistories.length}개</li>
           </ul>
         </div>
         <div className="history-card">
           <ul>
-            <li className="subject">현재 진행중인 스터디</li>
-            <li className="count">9개</li>
+            <li className="subject">현재 참여중인 스터디</li>
+            <li className="count">
+              {joiningGroups && ownGroups
+                ? joiningGroups.length + ownGroups.length
+                : 0}
+              개
+            </li>
           </ul>
         </div>
       </div>

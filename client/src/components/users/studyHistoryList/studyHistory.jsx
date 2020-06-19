@@ -65,6 +65,7 @@ const StudyHistory = ({ userHistory }) => {
       <div className="study-history-date">
         {parseUTC(userHistory.dates[0].date)}~
         {parseUTC(userHistory.dates[userHistory.dates.length - 1].date)}
+        {parseUTC(userHistory.startDate)}~{parseUTC(userHistory.endDate)}
       </div>
       <div>{address}</div>
     </StyledStudyHistory>
