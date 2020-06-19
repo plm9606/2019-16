@@ -119,6 +119,10 @@ const Reservation = ({ match }) => {
     axios
       .get(`${REQUEST_URL}/api/studygroup/detail/${id.current}`)
       .then(({ data }) => {
+        if (data.detailInfo.isReserved) window.location.href = "/";
+        else return data;
+      })
+      .then(({ data }) => {
         const groupInfo = data.detailInfo;
         const {
           _id,
