@@ -1,20 +1,26 @@
 const Users = require("../model/user");
+const user = require("../model/user");
 
 exports.updateJoiningGroups = async ({ userId, joiningGroup, addMode }) => {
   joiningGroup.group_id = joiningGroup._id;
   if (addMode) {
     Users.updateOne(
       { userId: userId },
-      { $push: { joiningGroups: joiningGroup } },
-      err => {
+      { $push: { joiningGroups: joiningGroup, groups: joiningGroup.group_id } },
+      (err) => {
         if (err) throw new Error(err);
       }
     );
   } else {
     Users.updateOne(
       { userId: userId },
-      { $pull: { joiningGroups: { group_id: joiningGroup._id } } },
-      err => {
+      {
+        $pull: {
+          joiningGroups: { group_id: joiningGroup._id },
+          groups: { group_id: joiningGroup._id }
+        }
+      },
+      (err) => {
         if (err) throw new Error(err);
       }
     );
@@ -24,21 +30,26 @@ exports.updateJoiningGroups = async ({ userId, joiningGroup, addMode }) => {
 exports.updateOwnGroups = async ({ userId, ownGroup }) => {
   Users.updateOne(
     { userId: userId },
-    { $push: { ownGroups: ownGroup } },
-    err => {
+    { $push: { ownGroups: ownGroup, groups: ownGroup.group_id } },
+    (err) => {
       if (err) throw new Error(err);
     }
   );
 };
 
 exports.deleteGroupInUsers = async ({ group }) => {
-  const userIds = group.members.map(member => member.id);
+  const userIds = group.members.map((member) => member.id);
 
-  userIds.forEach(userId => {
+  userIds.forEach((userId) => {
     Users.updateOne(
       { userId: userId },
-      { $pull: { joiningGroups: { group_id: group._id } } },
-      err => {
+      {
+        $pull: {
+          joiningGroups: { group_id: group._id },
+          groups: { group_id: group._id }
+        }
+      },
+      (err) => {
         if (err) throw new Error(err);
       }
     );
