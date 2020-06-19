@@ -10,7 +10,7 @@ class TcpServer {
     };
 
     this.dataMap = {};
-    this.server = net.createServer(socket => {
+    this.server = net.createServer((socket) => {
       this.onCreate(socket);
 
       socket.on("close", () => {
@@ -19,7 +19,7 @@ class TcpServer {
       socket.on("error", () => {
         this.onError(socket);
       });
-      socket.on("data", async data => {
+      socket.on("data", async (data) => {
         const key = await makeKey(socket);
 
         let mergedPacket = !this.dataMap[key]

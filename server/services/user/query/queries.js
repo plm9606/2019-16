@@ -58,7 +58,7 @@ exports.deleteGroupInUsers = async ({ group }) => {
   Users.updateOne(
     { userId: group.leader },
     { $pull: { ownGroups: { group_id: group._id } } },
-    err => {
+    (err) => {
       if (err) throw new Error(err);
     }
   );
