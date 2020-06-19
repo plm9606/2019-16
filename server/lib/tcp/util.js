@@ -35,11 +35,14 @@ exports.makePacket = (
 
   return JSON.stringify(packet) + PACKET_SPLITTER;
 };
+<<<<<<< HEAD
+=======
 
 exports.isLogService = name => {
   if (name === process.env.LOG_NAME) return true;
   return false;
 };
+>>>>>>> origin/release
 
 exports.isErrorPacket = method => {
   if (method === this.ERROR_PACKET_CODE) return true;

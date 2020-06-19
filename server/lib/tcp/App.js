@@ -16,7 +16,10 @@ class App extends TcpServer {
 
     this.sendTcpLog = makeLogSender.call(this, "tcp");
     (async () => {
+<<<<<<< HEAD
+=======
       if (isLogService(name)) return;
+>>>>>>> origin/release
       await new Promise((res) => this.connectToLogService(res));
       this.doMessageJob();
     })();
@@ -35,10 +38,15 @@ class App extends TcpServer {
   }
 
   async onRead(socket, data) {
+<<<<<<< HEAD
+    if (Object.prototype.hasOwnProperty.call(data, "nextQuery")) {
+      this.sendTcpLog(data.nextQuery);
+=======
     if (!isLogService(this.context.name) && data.hasOwnProperty("nextQuery")) {
       const spanId = await this.sendTcpLog(data.nextQuery);
 
       data.spanId = spanId;
+>>>>>>> origin/release
     }
 
     this.job(socket, data);
