@@ -161,7 +161,7 @@
           alert("같은 스터디룸에 대해서 다른 결제가 진행중입니다.");
           return;
         }
-        const nextUrl = `https://localhost:3000/payment/${studyGroupInfo._id}`; //await res.json();
+        const nextUrl = `http://localhost:3000/payment/${studyGroupInfo._id}`; //await res.json();
         window.location.href = nextUrl;
       }
     </script>
