@@ -2,18 +2,17 @@ const express = require("express");
 const router = express.Router();
 const { makePacket } = require("../../../../lib/tcp/util");
 
-function paymentRouter(apiGateway) {
+function reservationRouter(apiGateway) {
   router.post("/ready", (req, res, next) => {
-    const { userId, paymentInfo, reservationInfo } = req.body;
+    const { userId, reservationInfo } = req.body;
 
     req.packet = makePacket(
       "POST",
       "apigateway",
-      "inspectQueue",
-      "inspectQueue",
+      "addReservation",
+      "updateGroupReserved",
       {
         userId,
-        paymentInfo,
         reservationInfo
       },
       {},
@@ -23,19 +22,14 @@ function paymentRouter(apiGateway) {
     next();
   });
 
-  router.get("/approval/:roomId/:userId", (req, res, next) => {
-    const { pg_token } = req.query;
-    const { roomId, userId } = req.params;
-
+  router.get("/:groupId", (req, res, next) => {
     req.packet = makePacket(
-      "POST",
+      "GET",
       "apigateway",
-      "approvePayment",
-      "removeInQueue",
+      "findByGroupId",
+      "findByGroupId",
       {
-        pg_token,
-        userId,
-        roomId
+        groupId: req.params.groupId
       },
       {},
       req.resKey,
@@ -47,4 +41,4 @@ function paymentRouter(apiGateway) {
   return router;
 }
 
-module.exports = paymentRouter;
+module.exports = reservationRouter;
