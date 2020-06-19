@@ -1,6 +1,6 @@
 const TcpServer = require("./tcpServer");
 const TcpClient = require("./tcpClient");
-const { makePacket } = require("../tcp/util");
+const { makePacket, isLogService, isErrorPacket } = require("../tcp/util");
 const { getAppbyName, getAllApps, popMessageQueue } = require("../redis");
 const { makeLogSender } = require("./logUtils");
 
@@ -16,6 +16,10 @@ class App extends TcpServer {
 
     this.sendTcpLog = makeLogSender.call(this, "tcp");
     (async () => {
+<<<<<<< HEAD
+=======
+      if (isLogService(name)) return;
+>>>>>>> origin/release
       await new Promise((res) => this.connectToLogService(res));
       this.doMessageJob();
     })();
@@ -34,14 +38,21 @@ class App extends TcpServer {
   }
 
   async onRead(socket, data) {
+<<<<<<< HEAD
     if (Object.prototype.hasOwnProperty.call(data, "nextQuery")) {
       this.sendTcpLog(data.nextQuery);
+=======
+    if (!isLogService(this.context.name) && data.hasOwnProperty("nextQuery")) {
+      const spanId = await this.sendTcpLog(data.nextQuery);
+
+      data.spanId = spanId;
+>>>>>>> origin/release
     }
 
     this.job(socket, data);
   }
 
-  send(appClient, data) {
+  async send(appClient, data) {
     const packet = makePacket(
       data.method,
       data.curQuery,
@@ -57,6 +68,17 @@ class App extends TcpServer {
       this.ApiGateway.write(packet);
     } else {
       appClient.write(packet);
+    }
+    if (!isLogService(data.info.name) && data.spanId) {
+      if (isErrorPacket(data.method)) {
+        await this.sendTcpLog(data.curQuery, {
+          spanId: data.spanId,
+          errors: data.method,
+          errorMsg: data.body.msg
+        });
+        return;
+      }
+      await this.sendTcpLog(data.curQuery, data.spanId);
     }
   }
 
