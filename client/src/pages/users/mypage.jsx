@@ -28,6 +28,15 @@ const StyledGroupDetail = styled.div`
       margin-left: 0.5rem;
     }
   }
+
+  #mypage-button-row {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+    button {
+      margin-left: 1rem;
+    }
+  }
 `;
 
 // const userHistory = [
@@ -120,7 +129,11 @@ const MyPage = ({ match, history }) => {
   const { userInfo } = useContext(UserContext);
   const { userId } = userInfo;
   const { loading, error, data, request } = useAxios(apiAxios);
+  const withdraw = useAxios(axios.create({ baseURL: `${REQUEST_URL}/` }));
   const [userHistory, setUserHistory] = useState([]);
+  const deleteUser = () => {
+    withdraw.request("delete", `/auth/users/accounts/${userId}`);
+  };
   useEffect(() => {
     if (userId) request("get", `/user/history/${userId}`);
   }, [userId]);
@@ -129,6 +142,13 @@ const MyPage = ({ match, history }) => {
     data && setUserHistory(data.history);
   }, [data, loading]);
 
+  useEffect(() => {
+    if (withdraw.error)
+      window.alert("회원 탈퇴에 실패하였습니다. 다시 시도해주세요");
+    else if (withdraw.data) {
+      window.location.herf = "/";
+    }
+  }, [withdraw.data, withdraw.error]);
   return (
     <StyledGroupDetail>
       {(() => {
@@ -138,6 +158,12 @@ const MyPage = ({ match, history }) => {
       })()}
       <div>
         <UserInfoCard userHistories={userHistory} />
+        <div id="mypage-button-row">
+          <button className="button  is-light" onClick={deleteUser}>
+            회원 탈퇴
+          </button>
+          <button className="button  is-light">내 지역 수정</button>
+        </div>
         <StudyHistoryList userHistories={userHistory} />
       </div>
     </StyledGroupDetail>
