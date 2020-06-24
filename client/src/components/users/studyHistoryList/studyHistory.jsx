@@ -1,7 +1,14 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  Fragment,
+} from "react";
 import styled from "styled-components";
 import { coordToAddress } from "../../../lib/kakaoMapUtils";
 import moment from "moment";
+import { Link, Redirect } from "react-router-dom";
 
 const StyledStudyHistory = styled.div`
   display: flex;
@@ -50,6 +57,7 @@ const parseUTC = (utc) => {
 
 const StudyHistory = ({ userHistory }) => {
   const [address, setAddress] = useState("");
+
   useEffect(async () => {
     const arr = await coordToAddress(
       userHistory.studyRoom.location.coordinates[0],
@@ -59,16 +67,15 @@ const StudyHistory = ({ userHistory }) => {
     setAddress(arr[0].road_address.address_name);
   }, []);
   return (
+    // <Link to={`/group/detail/${userHistory.studyGroup._id}`}>
     <StyledStudyHistory url={userHistory.studyGroup.thumbnail}>
-      {/* <div className="study-history-background"></div> */}
       <div className="study-history-title">{userHistory.studyGroup.title}</div>
       <div className="study-history-date">
-        {parseUTC(userHistory.dates[0].date)}~
-        {parseUTC(userHistory.dates[userHistory.dates.length - 1].date)}
         {parseUTC(userHistory.startDate)}~{parseUTC(userHistory.endDate)}
       </div>
       <div>{address}</div>
     </StyledStudyHistory>
+    // </Link>
   );
 };
 
