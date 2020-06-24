@@ -1,14 +1,7 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-  Fragment,
-} from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import styled from "styled-components";
 import { coordToAddress } from "../../../lib/kakaoMapUtils";
 import moment from "moment";
-import { Link, Redirect } from "react-router-dom";
 
 const StyledStudyHistory = styled.div`
   display: flex;
@@ -17,6 +10,9 @@ const StyledStudyHistory = styled.div`
   align-items: center;
   width: 80%;
   height: 7rem;
+  cursor: pointer !important;
+  margin: 1rem;
+  position: relative;
   // box-shadow: inset 0px 0px 277px 3px #65656573;
 
   background-image: linear-gradient(
@@ -49,6 +45,11 @@ const StyledStudyHistory = styled.div`
   }
   .study-history-date {
   }
+  .completed-group {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 `;
 
 const parseUTC = (utc) => {
@@ -57,25 +58,36 @@ const parseUTC = (utc) => {
 
 const StudyHistory = ({ userHistory }) => {
   const [address, setAddress] = useState("");
-
+  const clickCard = () => {
+    window.location.href = `/group/detail/${userHistory.group_id}`;
+  };
   useEffect(async () => {
     const arr = await coordToAddress(
-      userHistory.studyRoom.location.coordinates[0],
-      userHistory.studyRoom.location.coordinates[1]
+      userHistory.location.lon,
+      userHistory.location.lat
     );
 
     setAddress(arr[0].road_address.address_name);
   }, []);
   return (
-    // <Link to={`/group/detail/${userHistory.studyGroup._id}`}>
-    <StyledStudyHistory url={userHistory.studyGroup.thumbnail}>
-      <div className="study-history-title">{userHistory.studyGroup.title}</div>
-      <div className="study-history-date">
-        {parseUTC(userHistory.startDate)}~{parseUTC(userHistory.endDate)}
-      </div>
+    <StyledStudyHistory url={userHistory.thumbnail} onClick={clickCard}>
+      {userHistory.completed ? (
+        <div className="has-background-danger has-text-white completed-group">
+          참여완료
+        </div>
+      ) : (
+        ""
+      )}
+      <div className="study-history-title">{userHistory.title}</div>
+      {userHistory.startDate ? (
+        <div className="study-history-date">
+          {parseUTC(userHistory.startDate)}~{parseUTC(userHistory.endDate)}
+        </div>
+      ) : (
+        ""
+      )}
       <div>{address}</div>
     </StyledStudyHistory>
-    // </Link>
   );
 };
 

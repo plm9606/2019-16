@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { UserContext } from "../../../pages/users";
 import { wrapper, coordToAddress } from "../../../lib/kakaoMapUtils";
+import moment from "moment";
 
 const StyledUserInfoCard = styled.div`
   display: flex;
@@ -90,8 +91,16 @@ const UserInfoCard = ({ userHistories }) => {
       <div className="user-history-dashboard">
         <div className="history-card">
           <ul>
-            <li className="subject">내가 참여한 스터디</li>
-            <li className="count">{userHistories.length}개</li>
+            <li className="subject">참여 완료한 스터디</li>
+            <li className="count">
+              {
+                userHistories.filter((history) => {
+                  if (moment(history.endDate).isBefore(moment()))
+                    return history;
+                }).length
+              }
+              개
+            </li>
           </ul>
         </div>
         <div className="history-card">
