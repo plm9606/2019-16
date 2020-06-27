@@ -17,7 +17,7 @@ class App extends TcpServer {
     this.sendTcpLog = makeLogSender.call(this, "tcp");
     (async () => {
       if (isLogService(name)) return;
-      await new Promise(res => this.connectToLogService(res));
+      await new Promise((res) => this.connectToLogService(res));
       this.doMessageJob();
     })();
   }
@@ -28,7 +28,7 @@ class App extends TcpServer {
     if (!Array.isArray(packets)) {
       this.job({}, JSON.parse(packets));
     } else {
-      packets.forEach(packet => {
+      packets.forEach((packet) => {
         this.job({}, JSON.parse(packet));
       });
     }
@@ -174,14 +174,12 @@ class App extends TcpServer {
         this.isConnectedToLogService = false;
       },
       () => {
-        console.log(`logService is down`);
         this.isConnectedToLogService = false;
       }
     );
 
     setInterval(() => {
       if (!this.isConnectedToLogService) {
-        console.log(`try connect to LogService`);
         this.logService.connect();
       }
     }, 1000);
