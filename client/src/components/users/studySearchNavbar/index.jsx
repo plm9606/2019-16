@@ -25,27 +25,15 @@ const Navbar = styled.div`
   }
 `;
 
-const StudySearchNavbar = () => {
+const StudySearchNavbar = ({ history }) => {
   const {
     userIndexState,
     userInfo,
     getApiAxiosState,
     pageNationState,
-    setPageNationState
+    setPageNationState,
   } = useContext(UserContext);
   const { primaryCategories, secondaryCategories } = userIndexState;
-  const { request } = getApiAxiosState;
-
-  const searchAllGroups = useCallback(() => {
-    const { lat, lon } = userInfo.userLocation;
-    const changedPageNationState = {
-      ...pageNationState,
-      page_idx: 1
-    };
-    setPageNationState(changedPageNationState);
-
-    request("get", `search/all/location/${lat}/${lon}/page/0/true`);
-  }, [userInfo]);
 
   return (
     <Navbar>
@@ -56,11 +44,9 @@ const StudySearchNavbar = () => {
       >
         <div id="navbarExampleTransparentExample" className="navbar-menu">
           <div className="navbar-start">
-            <Link to="/">
-              <span className="navbar-item" onClick={searchAllGroups}>
-                모두 보기
-              </span>{" "}
-            </Link>
+            <a href="/search/category/all">
+              <span className="navbar-item">모두 보기</span>
+            </a>
 
             {primaryCategories.map((category, idx) => (
               <StudyNavbarItem

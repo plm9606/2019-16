@@ -28,18 +28,18 @@ const StudyNavbarItem = ({ primaryCategory, secondaryCategories }) => {
     userInfo,
     getApiAxiosState,
     pageNationState,
-    setPageNationState
+    setPageNationState,
   } = useContext(UserContext);
   const { request } = getApiAxiosState;
 
   const searchGroups = useCallback(
-    e => {
+    (e) => {
       const categoryName = e.target.textContent.trim();
       const { lat, lon } = userInfo.userLocation;
       const changedPageNationState = {
         ...pageNationState,
         page_idx: 1,
-        category: categoryName
+        category: categoryName,
       };
       setPageNationState(changedPageNationState);
       request(
@@ -51,21 +51,24 @@ const StudyNavbarItem = ({ primaryCategory, secondaryCategories }) => {
   );
 
   const itemList = secondaryCategories.map((category, idx) => (
-    <Link to={`/category?query=${category}`}>
-      <span key={idx} className="navbar-item" onClick={searchGroups}>
+    // <Link to={`/search/category/${category}`}>
+    <a href={`/search/category/${category}`}>
+      <span key={idx} className="navbar-item">
         {category}
       </span>
-    </Link>
+    </a>
+
+    // </Link>
   ));
 
   return (
     <Category>
       <div className="navbar-item has-dropdown is-hoverable">
-        <Link to={`/category?query=${primaryCategory}`}>
-          <span className="navbar-link is-arrowless" onClick={searchGroups}>
-            {primaryCategory}
-          </span>
-        </Link>
+        {/* <Link to={`/search/category/${primaryCategory}`}> */}
+        <a href={`/search/category/${primaryCategory}`}>
+          <span className="navbar-link is-arrowless">{primaryCategory}</span>
+        </a>
+        {/* </Link> */}
         <div className="navbar-dropdown is-boxed">{itemList}</div>
       </div>
     </Category>
