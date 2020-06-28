@@ -1,104 +1,33 @@
-import React, { useState, useEffect, useContext } from "react";
-import queryString from "query-string";
-import styled from "styled-components";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { StyledSearch, isLastPagenation } from "./search";
+import { UserContext } from "./index";
 
 import StudyGroupCard from "../../components/users/groupCard";
-import Spinner from "../../components/users/spinner";
-
 import useInfiniteScroll from "../../lib/useInfiniteScroll";
 import useCoord2String from "../../lib/coord2string";
+import Spinner from "../../components/users/spinner";
 
 import { REQUEST_URL } from "../../config.json";
-import { UserContext } from "./index";
 import axios from "axios";
 import useAxios from "../../lib/useAxios";
+
 const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
 
-const StyledSearch = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  .main-jumbotron {
-    display: flex;
-    justify-content: center;
-
-    margin: 0 auto;
-    font-family: "Black Han Sans", sans-serif;
-    color: #000000;
-    padding-left: 5%;
-    padding: 5%;
-    align-self: start;
-    display: flex;
-
-    .main-title {
-      font-size: 3.7em;
-      border-bottom: 0.2px solid black;
-
-      &.highlight {
-        color: #e41d60;
-      }
-    }
-  }
-
-  .location-info-block {
-    display: flex;
-    justify-content: center;
-    font-weight: bold;
-    align-self: center;
-    margin: 0 0 1em 0;
-    padding: 0.1em 1em;
-    border-radius: 5px;
-
-    font-size: 0.8rem;
-  }
-
-  .study-group-list {
-    align-self: center;
-    min-height: 200px;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-
-    background-color: #f8f0ee;
-    width: 68rem;
-    flex-wrap: wrap;
-    padding: 0 1rem;
-    margin: 0 10%;
-    .study-group-card {
-      margin: 2em;
-    }
-  }
-
-  .no-result {
-    align-self: center;
-  }
-`;
-
-function isLastPagenation(takenGroups) {
-  const takenLength = takenGroups.length || 0;
-  if (!takenGroups || !takenLength || takenLength < 6) return true;
-  return false;
-}
-
-const Search = ({ location, match, history }) => {
-  const query = queryString.parse(location.search).query;
-
-  const pathname = location.pathname;
+const CategorySearch = ({ match, history }) => {
+  const { category } = match.params;
 
   const { userInfo } = useContext(UserContext);
   const { userLocation } = userInfo;
   let { lat, lon } = userLocation;
+  const [curLocation] = useCoord2String(window.kakao, lat, lon);
 
   const { request, data, loading, error } = useAxios(apiAxios);
+  const [isFetching, setIsFetching] = useInfiniteScroll(loadAdditionalItems);
 
   const [searchState, setSearchState] = useState({
     isLoading: true,
     searchData: [],
   });
-
-  const [curLocation] = useCoord2String(window.kakao, lat, lon);
-  const [isFetching, setIsFetching] = useInfiniteScroll(loadAdditionalItems);
 
   const [pageState, setpageState] = useState({
     page_idx: 1,
@@ -107,18 +36,46 @@ const Search = ({ location, match, history }) => {
 
   function loadAdditionalItems() {
     const { page_idx, isLastItem } = pageState;
-    if (isLastItem || !lat || !lon) return;
 
+    if (isLastItem || !lat || !lon) return;
     request(
       "get",
-      `/search/query/${query}/location/${lat}/${lon}/page/${page_idx}/true`
+      `/search/all${
+        category == "all" ? "" : "/category/" + category
+      }/location/${lat}/${lon}/page/${page_idx}/true`
     );
   }
 
   useEffect(() => {
     if (!lat || !lon) return;
-    request("get", `/search/query/${query}/location/${lat}/${lon}/page/0/true`);
-  }, [query, userLocation]);
+
+    request(
+      "get",
+      `/search/all${
+        category == "all" ? "" : "/category/" + category
+      }/location/${lat}/${lon}/page/0/true`
+    );
+  }, [userLocation]);
+
+  useEffect(() => {
+    if (!lat || !lon) return;
+
+    setSearchState({
+      isLoading: true,
+      searchData: [],
+    });
+
+    setpageState({
+      page_idx: 1,
+      isLastItem: false,
+    });
+    request(
+      "get",
+      `/search/all${
+        category == "all" ? "" : "/category/" + category
+      }/location/${lat}/${lon}/page/0/true`
+    );
+  }, [category]);
 
   useEffect(() => {
     if (!data || !pageState) return;
@@ -147,7 +104,7 @@ const Search = ({ location, match, history }) => {
     <StyledSearch>
       <div className="main-jumbotron">
         <div className="main-title highlight">
-          🔍 {pathname === "/search" ? query : `#${query}`}
+          카테고리: {category === "all" ? "전체" : category}
         </div>
       </div>
 
@@ -162,7 +119,7 @@ const Search = ({ location, match, history }) => {
       <div className="study-group-list">
         {(() => {
           if (loading) return <Spinner />;
-          if (error) return <h3> 에러 발생 </h3>;
+          if (error) return <div> 에러 발생 </div>;
           if (!searchState.searchData.length)
             return (
               <div className="is-size-4 no-result">
@@ -185,4 +142,4 @@ const Search = ({ location, match, history }) => {
   );
 };
 
-export { Search, StyledSearch, isLastPagenation };
+export default CategorySearch;

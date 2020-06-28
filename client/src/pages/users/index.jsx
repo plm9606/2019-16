@@ -24,9 +24,10 @@ import ReservationHeader from "../../components/users/ReservationHeader";
 import Footer from "../../components/Footer";
 import { initalState, userIndexReducer } from "../../reducer/users";
 import Reservation from "./reservation";
-import Search from "./search";
+import { Search } from "./search";
 import Payment from "./payment";
-
+import TagSearch from "./tagSearch";
+import CategorySearch from "./categorySearch";
 const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
 
 export const UserContext = createContext();
@@ -66,7 +67,7 @@ const UserPage = () => {
   const [groupInBooking, setgroupInBooking] = useState({
     title: null,
     personnel: null,
-    dates: []
+    dates: [],
   });
   const map = useRef();
 
@@ -125,7 +126,8 @@ const UserPage = () => {
           <Route exact path="/group/update/:id" component={GroupUpdatePage} />
           <Route path="/group/detail/:id" component={GroupDetailPage} />
           <Route path="/reservation/:id" component={Reservation} />
-          <Route path="/search/tags" component={Search} />
+          <Route path="/search/tags" component={TagSearch} />
+          <Route path="/search/category/:category" component={CategorySearch} />
           <Route path="/search" component={Search} />
           <Route path="/payment/:groupId" component={Payment} />
           <Route path="/mypage" component={Mypage} />
