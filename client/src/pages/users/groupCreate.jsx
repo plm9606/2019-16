@@ -22,7 +22,7 @@ import {
   change_during,
   add_tag,
   attach_image,
-  set_location
+  set_location,
 } from "../../reducer/users/groupCreate";
 import useAxios from "../../lib/useAxios.jsx";
 
@@ -86,7 +86,7 @@ const GroupCreate = ({ history }) => {
     dispatch(category_click(categoryType, categoryName));
   }, []);
 
-  const onChangeContent = useCallback(e => {
+  const onChangeContent = useCallback((e) => {
     const contentType = e.target.name;
     const description = e.target.value;
 
@@ -94,19 +94,19 @@ const GroupCreate = ({ history }) => {
   }, []);
 
   const onDayDispatch = useCallback(
-    i => e => {
+    (i) => (e) => {
       e.target.blur();
       dispatch(click_day(i));
     },
     []
   );
-  const onAttachImage = useCallback(file => dispatch(attach_image(file)), []);
-  const onChangeTagInput = useCallback(tagArr => {
+  const onAttachImage = useCallback((file) => dispatch(attach_image(file)), []);
+  const onChangeTagInput = useCallback((tagArr) => {
     dispatch(add_tag(tagArr));
   }, []);
 
   const onTimeDispatch = useCallback(
-    (TimeSlot, StartTime) => e => {
+    (TimeSlot, StartTime) => (e) => {
       const timeSlot = TimeSlot.current.value;
       const selectedStartTime = Number.parseInt(StartTime.current.value, 10);
       const resultStartTime = selectedStartTime + (timeSlot === "pm" ? 12 : 0);
@@ -116,7 +116,7 @@ const GroupCreate = ({ history }) => {
     []
   );
 
-  const onChangeDuring = useCallback(e => {
+  const onChangeDuring = useCallback((e) => {
     const during = +e.target.value;
     dispatch(change_during(during));
   });
@@ -129,11 +129,11 @@ const GroupCreate = ({ history }) => {
     const { daum, kakao } = window;
     const geocoder = new kakao.maps.services.Geocoder();
     let address;
-    const oncomplete = data => {
+    const oncomplete = (data) => {
       address = data.address;
       setLocationString(address);
     };
-    const onclose = state => {
+    const onclose = (state) => {
       if (state === "FORCE_CLOSE") {
         alert("필수 입력 사항입니다. 다시 로그인 해주세요");
         window.location.reload();
@@ -153,7 +153,7 @@ const GroupCreate = ({ history }) => {
   }, []);
 
   const onSubmit = useCallback(
-    async e => {
+    async (e) => {
       const { data } = state;
       const form = new FormData();
       const image = data.thumbnail;
@@ -180,14 +180,14 @@ const GroupCreate = ({ history }) => {
       request("post", "/studygroup/register", {
         data: form,
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       })
         .then(({ status, id }) => {
           if (status === 400) return alert("요청 데이터가 잘못됨");
           if (status === 200) history.push(`/group/detail/${id}`);
         })
-        .catch(err => {
+        .catch((err) => {
           alert("서버 에러 발생");
           console.error(err);
         });

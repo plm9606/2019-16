@@ -104,7 +104,7 @@ const MainPage = ({ history, location }) => {
     userInfo,
     getApiAxiosState,
     pageNationState,
-    setPageNationState
+    setPageNationState,
   } = useContext(UserContext);
   const { searchList } = userIndexState;
   const { userId, userLocation, ownGroups, joiningGroups } = userInfo;
@@ -128,7 +128,7 @@ const MainPage = ({ history, location }) => {
 
       const changedPageNationState = {
         ...pageNationState,
-        page_idx: page_idx + 1
+        page_idx: page_idx + 1,
       };
 
       if (isLastPagenation(additionalGroups))
@@ -156,7 +156,8 @@ const MainPage = ({ history, location }) => {
       <div className="main-jumbotron">
         {userId ? (
           <>
-            {ownGroups.length || joiningGroups.length ? (
+            {(ownGroups && ownGroups.length) ||
+            (joiningGroups && joiningGroups.length) ? (
               <MyStudyCarousel></MyStudyCarousel>
             ) : (
               <div className="no-groups">
@@ -207,7 +208,7 @@ const MainPage = ({ history, location }) => {
               </h3>
             );
 
-          return searchList.map(groupData => {
+          return searchList.map((groupData) => {
             return (
               <StudyGroupCard
                 key={groupData.id}

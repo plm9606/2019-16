@@ -5,7 +5,7 @@ const { kakao } = window;
 
 const mapOptions = {
   center: new kakao.maps.LatLng(37.503077, 127.021947),
-  level: 3
+  level: 3,
 };
 
 const makeOverlay = (marker, data) => {
@@ -16,7 +16,7 @@ const makeOverlay = (marker, data) => {
     clickable: true,
     position: marker.getPosition(),
     content,
-    yAnchor: 1
+    yAnchor: 1,
   });
   marker.overlay = overlay;
   return overlay;
@@ -63,9 +63,9 @@ function coordToAddress(y, x) {
   return new Promise((res, rej) => {
     const callback = function (result, status) {
       if (status === kakao.maps.services.Status.OK) {
-        res(result);
+        return res(result);
       } else {
-        rej(status);
+        return rej(status);
       }
     };
     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);

@@ -3,7 +3,7 @@ import React, {
   useState,
   Fragment,
   useRef,
-  useContext
+  useContext,
 } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -44,12 +44,12 @@ const Reservation = ({ match }) => {
 
   const addMarkerEvent = (marker, data) => {
     const infowindow = new kakao.maps.InfoWindow({
-      content: data["cafe_name"]
+      content: data["cafe_name"],
     });
 
     marker.infowindow_over = makeOverListener(studyRoomMap, marker, infowindow);
     marker.infowindow_out = makeOutListener(infowindow);
-    kakao.maps.event.addListener(marker, "click", function() {
+    kakao.maps.event.addListener(marker, "click", function () {
       // setHoverImage(marker, data, selectedMarker, currentOverlay, studyRoomMap);
 
       marker.setImage(hoverImage);
@@ -76,14 +76,14 @@ const Reservation = ({ match }) => {
       }
     });
 
-    kakao.maps.event.addListener(marker, "mouseout", function() {
+    kakao.maps.event.addListener(marker, "mouseout", function () {
       if (!selectedMarker || selectedMarker !== marker) {
         marker.setImage(markerImage);
       }
       infowindow.close();
     });
 
-    kakao.maps.event.addListener(marker, "mouseover", function() {
+    kakao.maps.event.addListener(marker, "mouseover", function () {
       infowindow.open(studyRoomMap, marker);
       marker.setImage(hoverImage);
     });
@@ -92,7 +92,7 @@ const Reservation = ({ match }) => {
   const drawMarker = (studyRoomData, map) => {
     const bounds = new kakao.maps.LatLngBounds();
 
-    const markers = studyRoomData.map(room => {
+    const markers = studyRoomData.map((room) => {
       const location = room.location.coordinates;
       const studyRoomlat = location[1];
       const studyRoomlng = location[0];
@@ -102,7 +102,7 @@ const Reservation = ({ match }) => {
       const marker = new kakao.maps.Marker({
         position: kakaoPosition,
         title: room.title,
-        image: markerImage
+        image: markerImage,
       });
 
       room.marker = marker;
@@ -122,7 +122,7 @@ const Reservation = ({ match }) => {
         if (data.detailInfo.isReserved) window.location.href = "/";
         else return data;
       })
-      .then(({ data }) => {
+      .then((data) => {
         const groupInfo = data.detailInfo;
         const {
           _id,
@@ -130,7 +130,7 @@ const Reservation = ({ match }) => {
           now_personnel,
           startTime,
           endTime,
-          days
+          days,
         } = groupInfo;
         const groupId = _id;
         const reservationDays = convertDatesFormat(days, startTime, endTime);
@@ -142,38 +142,36 @@ const Reservation = ({ match }) => {
           personnel: now_personnel,
           startTime,
           endTime,
-          dates: reservationDays
+          dates: reservationDays,
         };
         setgroupInBooking({
           title: groupInfo.title,
           personnel: now_personnel,
-          dates: `${moment()
-            .add(1, "weeks")
-            .format("MM-DD")} ~ ${moment()
+          dates: `${moment().add(1, "weeks").format("MM-DD")} ~ ${moment()
             .add(2, "weeks")
-            .format("MM-DD")}`
+            .format("MM-DD")}`,
         });
 
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           axios
             .post(`${REQUEST_URL}/api/studyroom/availableRooms`, requestBody)
-            .then(result => {
+            .then((result) => {
               const timeInfo = {
                 startTime,
                 endTime,
                 days,
                 dates: reservationDays,
-                groupId
+                groupId,
               };
               resolve({ timeInfo, availableRooms: result.data });
             });
         });
       })
       .then(({ availableRooms, timeInfo }) => {
-        const rooms = availableRooms.map(d => ({ ...d, ...timeInfo }));
+        const rooms = availableRooms.map((d) => ({ ...d, ...timeInfo }));
         setStudyRooms(rooms);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
@@ -188,10 +186,9 @@ const Reservation = ({ match }) => {
     if (!location.lat) return;
     studyRoomMap = new kakao.maps.Map(mapElement.current, {
       center: new kakao.maps.LatLng(location.lat, location.lon),
-      level: 3
+      level: 3,
     });
-    kakao.maps.event.addListener(studyRoomMap, "click", function() {
-      console.log(currentOverlay, selectedMarker);
+    kakao.maps.event.addListener(studyRoomMap, "click", function () {
       if (currentOverlay && selectedMarker) {
         currentOverlay.setMap(null);
         selectedMarker.setImage(markerImage);
@@ -205,9 +202,9 @@ const Reservation = ({ match }) => {
       map: studyRoomMap,
       averageCenter: true,
       minLevel: 5,
-      disableClickZoom: true
+      disableClickZoom: true,
     });
-    kakao.maps.event.addListener(clusterer, "clusterclick", function(cluster) {
+    kakao.maps.event.addListener(clusterer, "clusterclick", function (cluster) {
       // 현재 지도 레벨에서 1레벨 확대한 레벨
       var level = studyRoomMap.getLevel() - 1;
       // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대
@@ -230,12 +227,12 @@ const Reservation = ({ match }) => {
 export default Reservation;
 
 function makeOverListener(map, marker, infowindow) {
-  return function() {
+  return function () {
     infowindow.open(map, marker);
   };
 }
 function makeOutListener(infowindow) {
-  return function() {
+  return function () {
     infowindow.close();
   };
 }
@@ -245,7 +242,7 @@ function convertDatesFormat(days, startTime, endTime) {
     const suffix = "T00:00:00.000Z";
     const dateFormat = {
       start: startTime,
-      end: endTime
+      end: endTime,
     };
     const week1 =
       moment()
@@ -262,7 +259,7 @@ function convertDatesFormat(days, startTime, endTime) {
 
     return dates.concat([
       { ...dateFormat, date: week1 },
-      { ...dateFormat, date: week2 }
+      { ...dateFormat, date: week2 },
     ]);
   }, []);
   return formattedDates;

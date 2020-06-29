@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-export default axiosInstance => {
+export default (axiosInstance) => {
   const [state, setState] = useState({
     loading: true,
     data: null,
-    error: null
+    error: null,
   });
 
   return {
@@ -13,21 +13,21 @@ export default axiosInstance => {
       const option = {
         method,
         url,
-        ..._option
+        ..._option,
       };
 
       setState({ loading: true, data: null, error: null });
 
       return axiosInstance(option)
-        .then(result => {
+        .then((result) => {
           const { data } = result;
           setState({ ...state, data, loading: false });
           return data;
         })
-        .catch(error => {
+        .catch((error) => {
           setState({ ...state, error, loading: false });
           return error;
         });
-    }
+    },
   };
 };
