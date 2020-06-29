@@ -48,7 +48,7 @@ const Footer = ({ history }) => {
         </a>
       </div>
       <hr />
-      <div className="copyright">김세진 | 이수배 | 이아람 | 임태현</div>
+      {/* <div className="copyright">김세진 | 이수배 | 이아람 | 임태현</div> */}
       <div className="copyright">
         <div>Copyright ©StudyCombined</div>
         <div>arame@kakao.com</div>
