@@ -4,7 +4,8 @@ const {
   filterStudyGroup,
   addReservation,
   findByGroupId,
-  getHistoriesByIds
+  getHistoriesByIds,
+  deleteByGroupId
 } = require("./query/queries");
 
 const { RESERVATIONS_MONGO_URL } = process.env;
@@ -26,7 +27,8 @@ const queryMap = {
   filterStudyGroup,
   addReservation,
   findByGroupId,
-  getHistoriesByIds
+  getHistoriesByIds,
+  deleteByGroupId
 };
 
 async function doJob(socket, data) {
@@ -58,8 +60,6 @@ async function doJob(socket, data) {
       info: this.context
     };
 
-    // if (replyData.nextQuery === "removeInQueue")
-    //   appClient = this.appClients.payment;
     this.send(appClient, replyData);
   }
 }

@@ -56,11 +56,12 @@ exports.addReservation = async function ({ reservationInfo, userId }) {
       nextQuery: "updateGroupReserved",
       params: {
         reservationId,
-        studyGroupId: reservationInfo.studyGroupInfo._id
+        studyGroupId: reservationInfo.studyGroupInfo._id,
+        isReserved: true
       }
     },
     body: {},
-    appClient: this.appClients.studygroup,
+    appClient: this.appClients.studygroup
   };
 };
 
@@ -100,6 +101,7 @@ exports.getHistoriesByIds = async function ({ groups }) {
         "studyGroup.title": 1,
         "studyRoom.location": 1,
         "studyGroup.thumbnail": 1,
+        "studyGroup.leader": 1,
         startDate: "$start.date",
         endDate: "$end.date",
         startTime: "$start.start",
@@ -118,4 +120,28 @@ exports.getHistoriesByIds = async function ({ groups }) {
     },
     body: { history: res }
   };
+};
+
+exports.deleteByGroupId = async function ({ groupId, leader, members }) {
+  const res = await Reservations.deleteOne({
+    "studyGroup._id": new ObjectId(groupId)
+  });
+
+  if (res.ok === 1)
+    return {
+      headers: {
+        method: "PUT",
+        curQuery: "deleteByGroupId",
+        nextQuery: "toggleReserved",
+        params: {
+          groupId,
+          leader,
+          members,
+          isReserved: false
+        }
+      },
+      body: {},
+      appClient: this.appClients.studygroup
+    };
+  else throw Error("cannot delete");
 };
