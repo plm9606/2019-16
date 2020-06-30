@@ -1,11 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  useReducer,
-  useEffect,
-  useCallback,
-  useState,
-  useContext,
-} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { REQUEST_URL } from "../../config.json";
@@ -77,13 +71,14 @@ const makeParams = (history) => {
   return {
     group_id: history.studyGroup._id,
     location: {
-      lat: history.location.coordinates[0],
-      lon: history.location.coordinates[1],
+      lat: history.studyRoom.location.coordinates[1],
+      lon: history.studyRoom.location.coordinates[0],
     },
     thumbnail: history.studyGroup.thumbnail,
     title: history.studyGroup.title,
     startDate: history.startDate,
     endDate: history.endDate,
     completed: true,
+    leader: history.studyGroup.leader,
   };
 };

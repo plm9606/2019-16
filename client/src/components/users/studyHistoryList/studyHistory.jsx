@@ -12,8 +12,12 @@ const StyledStudyHistory = styled.div`
   img {
     border-radius: 15px 15px 0 0;
   }
-  .study-history-title {
+  .status-tag-row {
     padding-bottom: 1rem;
+    span {
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
   }
 `;
 
@@ -34,44 +38,43 @@ const StudyHistory = ({ userHistory }) => {
       userHistory.location.lat
     );
 
-    setAddress(arr[0].road_address.address_name);
+    setAddress(
+      arr[0].road_address
+        ? arr[0].road_address.address_name
+        : arr[0].address.address_name
+    );
   }, []);
 
   return (
     <StyledStudyHistory className="card" onClick={clickCard}>
-      {console.log(userHistory)}
-
-      {userHistory.completed ? (
-        <div className="has-background-danger has-text-white completed-group">
-          참여완료
-        </div>
-      ) : (
-        ""
-      )}
-      <div class="card-image">
-        <figure class="image is-4by3">
+      <div className="card-image">
+        <figure className="image is-4by3">
           <img src={userHistory.thumbnail} alt="group image" />
         </figure>
       </div>
-      <div class="card-content">
-        <div class="content">
+      <div className="card-content">
+        <div className="content">
           <div className="has-text-weight-bold is-size-5 study-history-title">
             {userHistory.title}
           </div>
-          <div>
+          <div className="status-tag-row">
             {userId && userHistory.leader === userId ? (
-              <span class="tag is-danger">그룹장</span>
+              <span className="tag is-danger">그룹장</span>
             ) : null}
-            <span class="tag is-light">
+            {/* <span className="tag is-light">
               {userHistory.isRecruiting ? "모집중" : "모집 완료"}
-            </span>
+            </span> */}
+            {userHistory.completed ? (
+              <span className="tag is-primary">참여 완료</span>
+            ) : null}
             {userHistory.isReserved ? (
-              <span class="tag is-primary">예약 완료</span>
+              <span className="tag is-primary">예약 완료</span>
             ) : null}
           </div>
           {userHistory.startDate ? (
             <div className="study-history-date">
-              {parseUTC(userHistory.startDate)}~{parseUTC(userHistory.endDate)}
+              {parseUTC(userHistory.startDate)} ~{" "}
+              {parseUTC(userHistory.endDate)}
             </div>
           ) : (
             ""
