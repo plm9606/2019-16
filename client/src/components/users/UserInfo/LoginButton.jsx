@@ -31,7 +31,11 @@ const LoginButton = () => {
     const geocoder = new kakao.maps.services.Geocoder();
     const userId = profile.id;
     const url = `${REQUEST_URL}/auth/users/accounts/${userId}`;
-    const options = { method: "GET", credentials: "include" };
+    const options = {
+      method: "GET",
+      credentials: "include",
+      withCredentials: true,
+    };
     const getResponse = await fetch(url, options);
     const getResult = await getResponse.json();
 
