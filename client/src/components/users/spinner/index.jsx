@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const StyledSpinner = styled.div`
   height: 61vh;
@@ -19,7 +19,7 @@ const StyledSpinner = styled.div`
     transform-origin: 40px 40px;
   }
   .lds-roller div:after {
-    content: ' ';
+    content: " ";
     display: block;
     position: absolute;
     width: 7px;
@@ -97,7 +97,7 @@ const StyledSpinner = styled.div`
 const Spinner = () => {
   return (
     <StyledSpinner>
-      <div class="lds-roller">
+      <div className="lds-roller">
         <div></div>
         <div></div>
         <div></div>

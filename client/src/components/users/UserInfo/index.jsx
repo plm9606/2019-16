@@ -31,7 +31,7 @@ const UserInfo = () => {
         <Fragment>
           <div>
             <Link to="/mypage">
-              <span class="tag is-white">마이페이지</span>
+              <span className="tag is-white">마이페이지</span>
             </Link>
           </div>
           <img
