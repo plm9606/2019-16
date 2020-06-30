@@ -53,7 +53,7 @@ class App extends TcpServer {
       data.info
     );
 
-    if (data.curQuery === data.endQuery) {
+    if (data.curQuery === data.endQuery || data.method === "REPLY") {
       this.ApiGateway.write(packet);
     } else {
       appClient.write(packet);
