@@ -26,7 +26,8 @@ const GroupSchema = new Schema(
     tags: { type: [String] },
     days: { type: [Number] },
     startTime: { type: Number },
-    endTime: { type: Number }
+    endTime: { type: Number },
+    isReserved: { type: Boolean }
   },
   { _id: false }
 );
