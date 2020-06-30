@@ -11,6 +11,9 @@ const doAndResponse = async (params, packetData, cb) => {
     if (replyData.curQuery === "toggleRegistration") {
       replyData.nextQuery = "updateJoiningGroups";
     }
+    if (replyData.curQuery === "toggleRecruitment") {
+      replyData.nextQuery = "toggleRecruitment";
+    }
     if (replyData.curQuery === "addGroup") {
       replyData.nextQuery = "updateOwnGroups";
     }
@@ -18,7 +21,13 @@ const doAndResponse = async (params, packetData, cb) => {
       replyData.nextQuery = "deleteGroupInUsers";
     }
     if (replyData.curQuery === "updateGroupReserved") {
-      replyData.nextQuery = "apigateway";
+      replyData.nextQuery = "modifyReservedInfo";
+    }
+    if (replyData.curQuery === "updateGroup") {
+      replyData.nextQuery = "modifyOwnGroupInfo";
+    }
+    if (replyData.curQuery === "toggleReserved") {
+      replyData.nextQuery = "modifyReservedInfo";
     }
     replyData.method = "REPLY";
     replyData.body = result;
@@ -55,6 +64,22 @@ async function doJob(data, appName_) {
       const group = replyData.body.group;
 
       replyData.params = { group };
+      appName = "user";
+    }
+    if (replyData.nextQuery === "modifyOwnGroupInfo") {
+      replyData.params = {
+        userId: replyData.body.userId,
+        studyGroup: replyData.body.ownGroup
+      };
+      appName = "user";
+    }
+    if (replyData.nextQuery === "modifyReservedInfo") {
+      replyData.params = {
+        leader: replyData.body.leader,
+        members: replyData.body.members,
+        groupId: replyData.body.groupId,
+        isReserved: replyData.body.isReserved
+      };
       appName = "user";
     }
   } catch (errReplyData) {
