@@ -12,7 +12,6 @@ import {
 
 const StyledMain = styled.div`
   width: 100%;
-  height: 23rem;
   background-color: whitesmoke;
 
   * {

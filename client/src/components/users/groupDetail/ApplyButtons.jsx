@@ -2,11 +2,12 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import moment from "moment";
 
 import { REQUEST_URL } from "../../../config.json";
 import useAxios from "../../../lib/useAxios";
 import { UserContext } from "../../../pages/users";
-
+import ReservedStudyRoom from "./ReservedStudyroom";
 const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
 
 const StyledApplyButtons = styled.div`
@@ -15,10 +16,15 @@ const StyledApplyButtons = styled.div`
   }
 `;
 
+const isOudated = (date) => {
+  if (moment(date).isBefore(moment())) return true;
+  return false;
+};
+
 const ApplyButtons = ({
   groupData,
   onToggleReservation,
-  onChangedNowPersonnel
+  onChangedNowPersonnel,
 }) => {
   const {
     _id,
@@ -33,9 +39,12 @@ const ApplyButtons = ({
 
   const { userInfo } = useContext(UserContext);
   const { request } = useAxios(apiAxios);
+  const getReservationInfo = useAxios(apiAxios);
   const { userId } = userInfo;
   const [memberType, setMemberType] = useState(null); // guest, searcher, joiner, leader
   const [isCanReserve, setIsCanReserve] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [reservation, setReservation] = useState(null);
   const isSatisfyPersonnelAtReservation =
     min_personnel <= now_personnel && now_personnel <= max_personnel;
   const isPersonnelHigherThanMax = now_personnel >= max_personnel;
@@ -49,9 +58,9 @@ const ApplyButtons = ({
       status,
       changedMemberType,
       changedNowPersonnel,
-      failReason
+      failReason,
     } = await request("post", "/studygroup/toggleRegistration", {
-      data: { userId, groupId: _id }
+      data: { userId, groupId: _id },
     });
 
     if (status === 200) {
@@ -69,7 +78,7 @@ const ApplyButtons = ({
       "patch",
       "/studygroup/recruit",
       {
-        data: { isRecruiting, groupId: _id }
+        data: { isRecruiting, groupId: _id },
       }
     );
 
@@ -79,9 +88,22 @@ const ApplyButtons = ({
     isSatisfyPersonnelAtReservation && setIsCanReserve(true);
   }, [isRecruiting, isSatisfyPersonnelAtReservation]);
 
+  const onCancelReservation = () => {
+    axios
+      .delete(`${REQUEST_URL}/api/reservation/${_id}`, {
+        data: { leader, members },
+      })
+      .then((data) => {
+        window.location.reload();
+      })
+      .catch((err) => {
+        window.alert("예약을 취소할 수 없습니다. 다시 시도해주세요.");
+      });
+  };
+
   useEffect(() => {
     if (!userId) return;
-    const isJoiner = members.map(m => m.id).some(id => id === userId);
+    const isJoiner = members.map((m) => m.id).some((id) => id === userId);
     let type;
 
     if (isJoiner) type = "joiner";
@@ -93,15 +115,37 @@ const ApplyButtons = ({
     setMemberType(type);
   }, [userId]);
 
+  useEffect(() => {
+    if (isReserved === true) {
+      getReservationInfo.request("get", `/reservation/${_id}`);
+    }
+  }, [isReserved]);
+
+  useEffect(() => {
+    getReservationInfo.data &&
+      getReservationInfo.data.length > 0 &&
+      setReservation(getReservationInfo.data[0]);
+  }, [getReservationInfo.data]);
+
+  useEffect(() => {
+    reservation && reservation.dates && setStartDate(reservation.dates[0].date);
+  }, [reservation]);
   return (
     <StyledApplyButtons>
+      {isReserved && isOudated(startDate) ? (
+        <button className="button is-danger" disabled="true">
+          모집 마감 - 예약완료
+        </button>
+      ) : null}
+      {isReserved && !isOudated(startDate) ? (
+        <button className="button is-danger" onClick={onCancelReservation}>
+          예약 취소하기
+        </button>
+      ) : null}
+
       {(() => {
-        if (isReserved)
-          return (
-            <button className="button is-danger" disabled="true">
-              모집 마감 - 예약완료
-            </button>
-          );
+        if (isReserved) return;
+
         switch (memberType) {
           case "searcher":
             return (
@@ -132,6 +176,7 @@ const ApplyButtons = ({
             return;
         }
       })()}
+      {reservation ? <ReservedStudyRoom reservationData={reservation} /> : null}
     </StyledApplyButtons>
   );
 };
