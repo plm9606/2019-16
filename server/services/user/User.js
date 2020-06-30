@@ -6,7 +6,11 @@ const {
   updateJoiningGroups,
   updateOwnGroups,
   deleteGroupInUsers,
-  getUserHistoryAll
+  getUserHistoryAll,
+  updateUserLocation,
+  modifyOwnGroupInfo,
+  modifyRecruitInfo,
+  modifyReservedInfo
 } = require("./query/queries");
 
 const { ACCOUNTS_MONGO_URL } = process.env;
@@ -24,11 +28,17 @@ mongoose
     console.log("User mongoDB connection fail", err);
   });
 
+// mongoose.set("debug", true);
+
 const queryMap = {
   updateJoiningGroups,
   updateOwnGroups,
   deleteGroupInUsers,
-  getUserHistoryAll
+  getUserHistoryAll,
+  updateUserLocation,
+  modifyOwnGroupInfo,
+  modifyRecruitInfo,
+  modifyReservedInfo
 };
 
 async function doJob(socket, data) {
