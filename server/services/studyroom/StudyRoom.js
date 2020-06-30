@@ -1,5 +1,11 @@
 const App = require("../../lib/tcp/App");
-const { queryResolver } = require("./queryResolver");
+const {
+  availableRooms,
+  getRoomById,
+  searchNearbyRooms
+} = require("./queryResolver");
+
+const queryMap = { availableRooms, getRoomById, searchNearbyRooms };
 
 async function jobEexcutor(_socket, data) {
   let socket = {};
@@ -7,16 +13,16 @@ async function jobEexcutor(_socket, data) {
   let queryResult;
 
   try {
-    queryResult = await queryResolver(nextQuery, params);
+    queryResult = await queryMap[nextQuery].call(this, nextQuery, params);
   } catch (error) {
-    queryResult = { method: "ERROR", body: { error } };
+    queryResult.packet = { method: "ERROR", body: { error } };
   } finally {
-    if (nextQuery === "availableRooms") {
-      socket = this.appClients.reservation;
+    if (queryResult.socket) {
+      socket = queryResult.socket;
     }
     this.send(socket, {
       ...data,
-      ...queryResult
+      ...queryResult.packet
     });
   }
 }

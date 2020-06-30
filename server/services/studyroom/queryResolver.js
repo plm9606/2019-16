@@ -1,6 +1,6 @@
 const StudyRooms = require("./models/studyrooms");
 
-const convertKntoMile = km => {
+const convertKntoMile = (km) => {
   return km / 6378.1;
 };
 
@@ -25,53 +25,50 @@ async function searchNearbyRooms(params) {
   return res;
 }
 
-async function getRoomById(id) {
-  try {
-    const studyRoom = await StudyRooms.findById(id);
+async function availableRooms(query, params) {
+  const studyRooms = await searchNearbyRooms(params);
 
-    return studyRoom;
-  } catch {
-    return "";
-  }
-}
-
-async function queryResolver(query, params) {
-  if (query === "availableRooms") {
-    const studyRooms = await searchNearbyRooms(params);
-
-    return {
+  return {
+    packet: {
       method: "GET",
       curQuery: query,
       nextQuery: "filterStudyGroup",
       params: { studyRooms, studyGroup: { ...params } },
       body: {}
-    };
-  }
+    },
+    socket: this.appClients.reservation
+  };
+}
 
-  if (query === "getRoomById") {
-    const studyRoom = await getRoomById(params.studyRoomId);
+async function getRoomById(query, params) {
+  const studyRoom = await StudyRooms.findById(params.studyRoomId);
 
-    if (studyRoom === "") {
-      return {
+  if (studyRoom === "") {
+    return {
+      packet: {
         method: "ERROR",
         curQuery: query,
         nextQuery: "apigateway",
         params: {},
         body: {}
-      };
-    }
+      },
+      socket: this.appClients.reservation
+    };
+  }
 
-    return {
+  return {
+    packet: {
       method: "REPLY",
       curQuery: query,
       nextQuery: "apigateway",
       params: {},
       body: { studyRoomInfo: studyRoom }
-    };
-  }
-  throw Error(
-    `Query is not matched with studyRoom query resolver. Your query is ${query}`
-  );
+    }
+  };
 }
 
-module.exports = { searchNearbyRooms, queryResolver };
+module.exports = {
+  searchNearbyRooms,
+  availableRooms,
+  getRoomById
+};
