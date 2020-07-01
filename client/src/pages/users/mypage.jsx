@@ -2,15 +2,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { REQUEST_URL } from "../../config.json";
 import useAxios from "../../lib/useAxios";
 import { UserContext } from "../../pages/users";
 import UserInfoCard from "../../components/users/userInfoCard";
-import Spinner from "../../components/users/spinner";
 import TabContainer from "../../components/users/studyHistoryList/tabcontainer";
 import AccountManagementRow from "../../components/users/mypage.accountManagement";
 import moment from "moment";
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 
 const StyledGroupDetail = styled.div`
   display: flex;

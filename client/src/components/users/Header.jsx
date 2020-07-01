@@ -6,7 +6,6 @@ import StudySearchNavbar from "./studySearchNavbar";
 import SuggestDropDown from "./suggestDropDown";
 
 import { UserContext } from "../../pages/users/index";
-import { REQUEST_URL } from "../../config.json";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -72,11 +71,11 @@ const Header = ({ history }) => {
 
   let onChangeTimer;
 
-  const onChange = useCallback(async e => {
+  const onChange = useCallback(async (e) => {
     const query = e.target.value;
     setKeyword(query);
     if (e.target.value[0] === "#") return;
-    const url = `${REQUEST_URL}/api/search/suggest/${query}`;
+    const url = `${process.env.REACT_APP_REQUEST_URL}/api/search/suggest/${query}`;
 
     if (onChangeTimer) {
       clearTimeout(onChangeTimer);
@@ -87,14 +86,14 @@ const Header = ({ history }) => {
       onChangeTimer = setTimeout(async () => {
         const response = await fetch(url);
         const jsonRes = await response.json();
-        const suggestions = jsonRes.map(jsonRes => jsonRes.query);
+        const suggestions = jsonRes.map((jsonRes) => jsonRes.query);
         setSuggestion(suggestions);
       }, 100);
     }
   });
 
   const onKeyDown = useCallback(
-    e => {
+    (e) => {
       if (e.key !== "Enter") return;
       if (!isProperInput(keyword)) return alert("올바른 검색어를 입력해주세요");
 
@@ -146,8 +145,8 @@ const Header = ({ history }) => {
   );
 };
 
-const isTagSearch = keyword => keyword[0] === "#";
-const isProperInput = keyword =>
+const isTagSearch = (keyword) => keyword[0] === "#";
+const isProperInput = (keyword) =>
   typeof keyword === "string" &&
   keyword &&
   (keyword[0] !== "#" ? true : keyword.length > 1);

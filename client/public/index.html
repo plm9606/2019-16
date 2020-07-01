@@ -77,11 +77,11 @@
     ></script>
     <script>
       async function getStudyGroupInfoById(id) {
-        const url = `https://localhost:8000/api/studygroup/detail/${id}`; //`https://studycombined.shop:8000/api/studygroup/detail/${id}`;
+        const url = `%REACT_APP_REQUEST_URL%/api/studygroup/detail/${id}`; //`https://studycombined.shop:8000/api/studygroup/detail/${id}`;
         const options = {
           method: "GET",
           mode: "cors",
-          credentials: "include"
+          credentials: "include",
         };
         try {
           const res = await fetch(url, options);
@@ -98,11 +98,11 @@
       }
 
       async function getStudyRoomInfoById(id) {
-        const url = `https://localhost:8000/api/studyroom/${id}`; //`https://studycombined.shop:8000/api/studyroom/${id}`;
+        const url = `%REACT_APP_REQUEST_URL%/api/studyroom/${id}`; //`https://studycombined.shop:8000/api/studyroom/${id}`;
         const options = {
           method: "GET",
           mode: "cors",
-          credentials: "include"
+          credentials: "include",
         };
 
         try {
@@ -145,15 +145,15 @@
         parsedInfo.reservationInfo.studyRoomInfo = studyRoomInfo;
 
         const data = JSON.stringify(parsedInfo);
-        const url = 'https://localhost:8000/api/reservation/ready'; //"https://studycombined.shop:8000/api/payment/ready";
+        const url = "%REACT_APP_REQUEST_URL%/api/reservation/ready"; //"https://studycombined.shop:8000/api/payment/ready";
         const options = {
           method: "POST",
           headers: {
-            "Content-Type": "application/json;charset=utf-8"
+            "Content-Type": "application/json;charset=utf-8",
           },
           mode: "cors",
           credentials: "include",
-          body: data
+          body: data,
         };
         const res = await fetch(url, options);
         ol.classList.remove("is-loading");
@@ -161,7 +161,7 @@
           alert("같은 스터디룸에 대해서 다른 결제가 진행중입니다.");
           return;
         }
-        const nextUrl = `http://localhost:3000/payment/${studyGroupInfo._id}`; //await res.json();
+        const nextUrl = `/payment/${studyGroupInfo._id}`; //await res.json();
         window.location.href = nextUrl;
       }
     </script>

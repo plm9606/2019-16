@@ -1,7 +1,6 @@
 import React from "react";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
-import { REQUEST_URL } from "../../../config.json";
 import "./overlay.scss";
 
 const CustomOverlay = ({ marker, data }) => {
@@ -18,7 +17,7 @@ const CustomOverlay = ({ marker, data }) => {
     startTime,
     endTime,
     dates,
-    groupId
+    groupId,
   } = data;
   const overlay = marker.overlay;
   const roomId = _id;

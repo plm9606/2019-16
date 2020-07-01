@@ -4,7 +4,6 @@ import axios from "axios";
 import resizeImage from "../../lib/imageResize";
 import { isProperGroupDataFormat } from "../../lib/utils";
 
-import { REQUEST_URL } from "../../config.json";
 import Category from "../../components/users/groupCreate/Category";
 import ImageUploader from "../../components/users/groupCreate/ImageUploader";
 import TagInput from "../../components/users/groupCreate/TagInput";
@@ -26,7 +25,9 @@ import {
 } from "../../reducer/users/groupCreate";
 import useAxios from "../../lib/useAxios.jsx";
 
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 
 const StyledGroupCreate = styled.div`
   width: 60%;

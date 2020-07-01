@@ -12,7 +12,6 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 
 import useAxios from "../../lib/useAxios";
-import { REQUEST_URL } from "../../config.json";
 
 import MainPage from "./Main";
 import GroupCreatePage from "./groupCreate";
@@ -28,7 +27,9 @@ import { Search } from "./search";
 import Payment from "./payment";
 import TagSearch from "./tagSearch";
 import CategorySearch from "./categorySearch";
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 
 export const UserContext = createContext();
 
@@ -75,7 +76,7 @@ const UserPage = () => {
     const parsedUserInfo = jwtParser();
 
     if (parsedUserInfo) {
-      const url = `${REQUEST_URL}/auth/users/accounts/${parsedUserInfo.id}`;
+      const url = `${process.env.REACT_APP_REQUEST_URL}/auth/users/accounts/${parsedUserInfo.id}`;
       const options = { method: "GET", mode: "cors", credentials: "include" };
 
       fetch(url, options)

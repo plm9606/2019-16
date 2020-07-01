@@ -10,7 +10,6 @@ import MyStudyCarousel from "../../components/users/myStudyCardCarousel";
 import useCoord2String from "../../lib/coord2string";
 import { set_groups } from "../../reducer/users";
 import { UserContext } from "./index";
-import { REQUEST_URL } from "../../config.json";
 import axios from "axios";
 import { set_additional_groups } from "../../reducer/users/index";
 
@@ -119,9 +118,9 @@ const MainPage = ({ history, location }) => {
   function loadAdditionalItems() {
     const { page_idx, category, isLastItem } = pageNationState;
     if (isLastItem) return;
-    let url = `${REQUEST_URL}/api/search/all/location/${lat}/${lon}/page/${page_idx}/true`;
+    let url = `${process.env.REACT_APP_REQUEST_URL}/api/search/all/location/${lat}/${lon}/page/${page_idx}/true`;
     if (category)
-      url = `${REQUEST_URL}/api/search/all/category/${category}/location/${lat}/${lon}/page/${page_idx}/true`;
+      url = `${process.env.REACT_APP_REQUEST_URL}/api/search/all/category/${category}/location/${lat}/${lon}/page/${page_idx}/true`;
 
     axios.get(url).then(({ data }) => {
       const additionalGroups = data;

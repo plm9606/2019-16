@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyledSearch, isLastPagenation } from "./search";
 import { UserContext } from "./index";
 
@@ -7,11 +7,12 @@ import useInfiniteScroll from "../../lib/useInfiniteScroll";
 import useCoord2String from "../../lib/coord2string";
 import Spinner from "../../components/users/spinner";
 
-import { REQUEST_URL } from "../../config.json";
 import axios from "axios";
 import useAxios from "../../lib/useAxios";
 
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 
 const CategorySearch = ({ match, history }) => {
   const { category } = match.params;

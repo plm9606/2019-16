@@ -11,7 +11,6 @@ import moment, { Moment as MomentTypes } from "moment";
 import useWindowSize from "../../lib/useWindowSize";
 import { markerImage, hoverImage, makeOverlay } from "../../lib/kakaoMapUtils";
 import StudyRoomList from "../../components/users/studyRoomList";
-import { REQUEST_URL } from "../../config.json";
 import { UserContext } from "./index";
 const { kakao } = window;
 let studyRoomMap;
@@ -117,7 +116,9 @@ const Reservation = ({ match }) => {
 
   useEffect(() => {
     axios
-      .get(`${REQUEST_URL}/api/studygroup/detail/${id.current}`)
+      .get(
+        `${process.env.REACT_APP_REQUEST_URL}/api/studygroup/detail/${id.current}`
+      )
       .then(({ data }) => {
         if (data.detailInfo.isReserved) window.location.href = "/";
         else return data;
@@ -154,7 +155,10 @@ const Reservation = ({ match }) => {
 
         return new Promise((resolve) => {
           axios
-            .post(`${REQUEST_URL}/api/studyroom/availableRooms`, requestBody)
+            .post(
+              `${process.env.REACT_APP_REQUEST_URL}/api/studyroom/availableRooms`,
+              requestBody
+            )
             .then((result) => {
               const timeInfo = {
                 startTime,

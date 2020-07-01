@@ -4,11 +4,10 @@ import React, {
   useReducer,
   useContext,
   useEffect,
-  useState
+  useState,
 } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { REQUEST_URL } from "../../config.json";
 import useAxios from "../../lib/useAxios";
 import imageResize from "../../lib/imageResize";
 import { isURL, isProperGroupDataFormat } from "../../lib/utils";
@@ -31,10 +30,12 @@ import {
   add_tag,
   set_initial_data,
   attach_image,
-  set_location
+  set_location,
 } from "../../reducer/users/groupUpdate";
 
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 
 const StyledGroupUpdate = styled.div`
   width: 60%;
@@ -92,8 +93,8 @@ const GroupUpdate = ({ match, history }) => {
 
   const { category, tags, title, subtitle, intro } = state.data;
 
-  const onAttachImage = useCallback(file => dispatch(attach_image(file)), []);
-  const onChangeContent = useCallback(e => {
+  const onAttachImage = useCallback((file) => dispatch(attach_image(file)), []);
+  const onChangeContent = useCallback((e) => {
     const contentType = e.target.name;
     const description = e.target.value;
 
@@ -109,19 +110,19 @@ const GroupUpdate = ({ match, history }) => {
   }, []);
 
   const onDayDispatch = useCallback(
-    i => e => {
+    (i) => (e) => {
       e.target.blur();
       dispatch(click_day(i));
     },
     []
   );
 
-  const onChangeTagInput = useCallback(tagArr => {
+  const onChangeTagInput = useCallback((tagArr) => {
     dispatch(add_tag(tagArr));
   }, []);
 
   const onTimeDispatch = useCallback(
-    (TimeSlot, StartTime) => e => {
+    (TimeSlot, StartTime) => (e) => {
       const timeSlot = TimeSlot.current.value;
       const selectedStartTime = Number.parseInt(StartTime.current.value, 10);
       const resultStartTime = selectedStartTime + (timeSlot === "pm" ? 12 : 0);
@@ -131,7 +132,7 @@ const GroupUpdate = ({ match, history }) => {
     []
   );
 
-  const onChangeDuring = useCallback(e => {
+  const onChangeDuring = useCallback((e) => {
     const during = +e.target.value;
     dispatch(change_during(during));
   });
@@ -140,11 +141,11 @@ const GroupUpdate = ({ match, history }) => {
     const { daum, kakao } = window;
     const geocoder = new kakao.maps.services.Geocoder();
     let address;
-    const oncomplete = data => {
+    const oncomplete = (data) => {
       address = data.address;
       setLocationString(address);
     };
-    const onclose = state => {
+    const onclose = (state) => {
       if (state === "FORCE_CLOSE") {
         alert("필수 입력 사항입니다. 다시 로그인 해주세요");
         window.location.reload();
@@ -164,7 +165,7 @@ const GroupUpdate = ({ match, history }) => {
   }, []);
 
   const onSubmit = useCallback(
-    async e => {
+    async (e) => {
       const { data } = state;
       const form = new FormData();
       const image = data.thumbnail;
@@ -193,15 +194,15 @@ const GroupUpdate = ({ match, history }) => {
       request("put", "/studygroup/detail", {
         data: form,
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       })
-        .then(data => {
+        .then((data) => {
           const { id, status, reason } = data;
           if (status === 400) return alert(reason);
           if (status === 200) history.push(`/group/detail/${id}`);
         })
-        .catch(err => {
+        .catch((err) => {
           alert("에러 발생");
           console.error(err);
         });
@@ -240,7 +241,7 @@ const GroupUpdate = ({ match, history }) => {
           }
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         alert("요청 에러");
       });

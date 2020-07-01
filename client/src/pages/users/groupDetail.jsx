@@ -3,7 +3,6 @@ import React, { useReducer, useEffect, useCallback, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { REQUEST_URL } from "../../config.json";
 import useAxios from "../../lib/useAxios";
 import { UserContext } from "../../pages/users";
 import Header from "../../components/users/groupDetail/Header";
@@ -12,10 +11,12 @@ import Intro from "../../components/users/groupDetail/Intro";
 import {
   groupDetail as groupDetailReducer,
   initialState,
-  set_detail_data
+  set_detail_data,
 } from "../../reducer/users/groupDetail";
 
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 
 const StyledGroupDetail = styled.div`
   display: flex;

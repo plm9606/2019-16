@@ -4,11 +4,12 @@ import styled from "styled-components";
 import axios from "axios";
 import moment from "moment";
 
-import { REQUEST_URL } from "../../../config.json";
 import useAxios from "../../../lib/useAxios";
 import { UserContext } from "../../../pages/users";
 import ReservedStudyRoom from "./ReservedStudyroom";
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 
 const StyledApplyButtons = styled.div`
   .button:not(:last-child) {
@@ -90,7 +91,7 @@ const ApplyButtons = ({
 
   const onCancelReservation = () => {
     axios
-      .delete(`${REQUEST_URL}/api/reservation/${_id}`, {
+      .delete(`${process.env.REACT_APP_REQUEST_URL}/api/reservation/${_id}`, {
         data: { leader, members },
       })
       .then((data) => {

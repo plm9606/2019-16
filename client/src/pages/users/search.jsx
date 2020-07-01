@@ -8,11 +8,12 @@ import Spinner from "../../components/users/spinner";
 import useInfiniteScroll from "../../lib/useInfiniteScroll";
 import useCoord2String from "../../lib/coord2string";
 
-import { REQUEST_URL } from "../../config.json";
 import { UserContext } from "./index";
 import axios from "axios";
 import useAxios from "../../lib/useAxios";
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 
 const StyledSearch = styled.div`
   display: flex;

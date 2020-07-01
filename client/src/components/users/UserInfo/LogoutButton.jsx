@@ -1,16 +1,15 @@
 import React from "react";
-import { REQUEST_URL } from "../../../config.json";
 
 const LogoutButton = () => {
   return (
     <button
       className="button is-rounded is-warning"
       onClick={async () => {
-        const url = `${REQUEST_URL}/auth/users/logout`;
+        const url = `${process.env.REACT_APP_REQUEST_URL}/auth/users/logout`;
         const options = { method: "GET", credentials: "include" };
         const result = await fetch(url, options);
 
-        if (result.ok) window.location.href = "https://studycombined.shop";
+        if (result.ok) window.location.href = process.env.REACT_APP_CLIENT_URL;
       }}
     >
       로그아웃

@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
 import useAxios from "../../../lib/useAxios";
 import { UserContext } from "../../../pages/users/";
 import axios from "axios";
-import { REQUEST_URL } from "../../../config.json";
 
-const apiAxios = axios.create({ baseURL: `${REQUEST_URL}/api` });
+const apiAxios = axios.create({
+  baseURL: `${process.env.REACT_APP_REQUEST_URL}/api`,
+});
 const StyledAccountManagementRow = styled.div`
   display: flex;
   justify-content: center;
@@ -18,7 +19,9 @@ const StyledAccountManagementRow = styled.div`
 const AccountManagementRow = ({ userHistory }) => {
   const { userInfo } = useContext(UserContext);
   const { userId } = userInfo;
-  const withdraw = useAxios(axios.create({ baseURL: `${REQUEST_URL}/` }));
+  const withdraw = useAxios(
+    axios.create({ baseURL: `${process.env.REACT_APP_REQUEST_URL}/` })
+  );
 
   useEffect(() => {
     if (withdraw.error)
@@ -47,7 +50,7 @@ const AccountManagementRow = ({ userHistory }) => {
           lat: +locationResult[0].y,
           lon: +locationResult[0].x,
         };
-        const url = `${REQUEST_URL}/api/user/location`;
+        const url = `${process.env.REACT_APP_REQUEST_URL}/api/user/location`;
         const data = {
           userId,
           lat: userLocation.lat,

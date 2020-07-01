@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Receipt from "../../components/users/Receipt";
 import ReactLoading from "react-loading";
 import styled from "styled-components";
-import { REQUEST_URL } from "../../config.json";
 
 const Loading = ({ type, color }) => (
   <Section>
@@ -23,7 +22,7 @@ const Payment = ({ match, location }) => {
   const { groupId } = match.params;
 
   async function fetchReceipt() {
-    const url = `${REQUEST_URL}/api/reservation/${groupId}`;
+    const url = `${process.env.REACT_APP_REQUEST_URL}/api/reservation/${groupId}`;
     const options = {
       method: "GET",
       mode: "cors",

@@ -1,9 +1,7 @@
-import React, { useContext, useCallback } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import KakaoLogin from "react-kakao-login";
 import { UserContext } from "../../../pages/users";
-import { REQUEST_URL, KAKAO_JS_KEY } from "../../../config.json";
-import { set_my_group, set_join_group } from "../../../reducer/users/index";
 
 const DEFAULT_PROFILE_IMAGE = "/image/profile.jpg";
 
@@ -30,7 +28,7 @@ const LoginButton = () => {
     const { daum, kakao } = window;
     const geocoder = new kakao.maps.services.Geocoder();
     const userId = profile.id;
-    const url = `${REQUEST_URL}/auth/users/accounts/${userId}`;
+    const url = `${process.env.REACT_APP_REQUEST_URL}/auth/users/accounts/${userId}`;
     const options = {
       method: "GET",
       credentials: "include",
@@ -56,7 +54,7 @@ const LoginButton = () => {
                 lat: +locationResult[0].y,
                 lon: +locationResult[0].x,
               };
-              const url = `${REQUEST_URL}/auth/users/accounts`;
+              const url = `${process.env.REACT_APP_REQUEST_URL}/auth/users/accounts`;
               const data = {
                 kakaoAccessToken: response.access_token,
                 userId: profile.id,
@@ -89,7 +87,7 @@ const LoginButton = () => {
       alert("주소를 입력 해주세요");
       new daum.Postcode({ oncomplete, onclose }).open();
     } else {
-      const url = `${REQUEST_URL}/auth/users/accounts/${userId}`;
+      const url = `${process.env.REACT_APP_REQUEST_URL}/auth/users/accounts/${userId}`;
       const options = {
         method: "PATCH",
         headers: {
@@ -111,7 +109,7 @@ const LoginButton = () => {
 
   return (
     <KakaoLoginButton
-      jsKey={KAKAO_JS_KEY}
+      jsKey={process.env.REACT_APP_KAKAO_JS_KEY}
       onSuccess={onSuccess}
       onFailure={console.error}
       getProfile="true"
