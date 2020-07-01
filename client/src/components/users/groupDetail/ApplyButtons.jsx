@@ -93,6 +93,8 @@ const ApplyButtons = ({
     axios
       .delete(`${process.env.REACT_APP_REQUEST_URL}/api/reservation/${_id}`, {
         data: { leader, members },
+        credentials: "include",
+        withCredentials: true,
       })
       .then((data) => {
         window.location.reload();
