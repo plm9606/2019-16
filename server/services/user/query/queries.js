@@ -1,6 +1,8 @@
 const Users = require("../model/user");
 
-exports.updateJoiningGroups = async ({ userId, joiningGroup, addMode }) => {
+exports.updateJoiningGroups = async (params) => {
+  const { userId, joiningGroup, addMode } = params;
+
   joiningGroup.group_id = joiningGroup._id;
   if (addMode) {
     Users.updateOne(
@@ -30,7 +32,7 @@ exports.updateJoiningGroups = async ({ userId, joiningGroup, addMode }) => {
     curQuery: "updateJoiningGroups",
     nextQuery: "apigateway",
     params: {},
-    body: {}
+    body: { ...params }
   };
 };
 
