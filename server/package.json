@@ -2,13 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "dependencies": {
     "dotenv": "^8.2.0",
     "eslint-config-naver": "^2.1.0",
     "eslint-config-prettier": "^6.11.0",
     "jest": "^24.9.0",
-    "mongoose": "^5.9.20",
+    "mongoose": "^5.9.21",
     "redis": "^2.8.0"
   },
   "devDependencies": {
