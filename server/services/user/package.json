@@ -10,9 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "mongoose": "^5.9.16"
+    "mongoose": "^5.9.21"
   },
   "devDependencies": {
-    "jest": "^26.0.1"
+    "jest": "^26.1.0"
   }
 }
