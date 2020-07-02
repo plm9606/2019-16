@@ -14,13 +14,13 @@ function durationEndDataIsCome(spanId) {
 }
 
 function sendLog(logPacket, spanId) {
-  console.log(`log Packtet ${JSON.stringify(logPacket)}`);
-  console.log("before delete log map", this.logMap);
+//  console.log(`log Packtet ${JSON.stringify(logPacket)}`);
+//  console.log("before delete log map", this.logMap);
   new Promise((resolve) => resolve(JSON.stringify(logPacket)))
     .then((JSONData) => {
       indexLog(JSONData, logPacket.timestamp);
       delete this.logMap[spanId];
-      console.log(`after delete log in map \n`, this.logMap);
+//      console.log(`after delete log in map \n`, this.logMap);
     })
     .catch((err) => {
       console.log(err);
@@ -28,7 +28,7 @@ function sendLog(logPacket, spanId) {
 }
 
 function calculateDuration(spanId, durationEndData) {
-  console.log("durationEndData is COME!!!!!!!!!!", spanId, durationEndData);
+//  console.log("durationEndData is COME!!!!!!!!!!", spanId, durationEndData);
 
   const durationStartData = this.logMap[spanId];
   const durationStart = durationStartData.timestamp;
@@ -36,7 +36,7 @@ function calculateDuration(spanId, durationEndData) {
 
   const duration = durationEnd - durationStart;
 
-  console.log(`--------------------------- duration is ${duration}`);
+  //console.log(`--------------------------- duration is ${duration}`);
 
   const logPacket = { ...durationStartData, ...durationEndData, duration };
 
