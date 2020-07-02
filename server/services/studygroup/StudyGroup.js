@@ -48,15 +48,24 @@ async function doJob(data, appName_) {
 
   try {
     replyData = await doAndResponse(params, data, queryMap[nextQuery]);
-    if (
-      replyData.nextQuery === "updateJoiningGroups" ||
-      replyData.nextQuery === "updateOwnGroups"
-    ) {
+    if (replyData.nextQuery === "updateOwnGroups") {
       replyData.params = {
         userId: replyData.body.userId,
         joiningGroup: replyData.body.joiningGroup,
         ownGroup: replyData.body.ownGroup,
         addMode: !replyData.body.isJoiner
+      };
+      appName = "user";
+    }
+    if (replyData.nextQuery === "updateJoiningGroups") {
+      replyData.params = {
+        changedMemberType: replyData.body.changedMemberType,
+        changedNowPersonnel: replyData.body.changedNowPersonnel,
+        userId: replyData.body.userId,
+        joiningGroup: replyData.body.joiningGroup,
+        isJoiner: replyData.body.isJoiner,
+        addMode: !replyData.body.isJoiner,
+        status: replyData.body.status
       };
       appName = "user";
     }
