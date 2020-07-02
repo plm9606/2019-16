@@ -11,6 +11,9 @@ const doAndResponse = async (params, packetData, cb) => {
     if (replyData.curQuery === "toggleRegistration") {
       replyData.nextQuery = "updateJoiningGroups";
     }
+    if (replyData.curQuery === "toggleRecruitment") {
+      replyData.nextQuery = "toggleRecruitment";
+    }
     if (replyData.curQuery === "addGroup") {
       replyData.nextQuery = "updateOwnGroups";
     }
@@ -18,7 +21,13 @@ const doAndResponse = async (params, packetData, cb) => {
       replyData.nextQuery = "deleteGroupInUsers";
     }
     if (replyData.curQuery === "updateGroupReserved") {
-      replyData.nextQuery = "apigateway";
+      replyData.nextQuery = "modifyReservedInfo";
+    }
+    if (replyData.curQuery === "updateGroup") {
+      replyData.nextQuery = "modifyOwnGroupInfo";
+    }
+    if (replyData.curQuery === "toggleReserved") {
+      replyData.nextQuery = "modifyReservedInfo";
     }
     replyData.method = "REPLY";
     replyData.body = result;
@@ -39,10 +48,7 @@ async function doJob(data, appName_) {
 
   try {
     replyData = await doAndResponse(params, data, queryMap[nextQuery]);
-    if (
-      replyData.nextQuery === "updateJoiningGroups" ||
-      replyData.nextQuery === "updateOwnGroups"
-    ) {
+    if (replyData.nextQuery === "updateOwnGroups") {
       replyData.params = {
         userId: replyData.body.userId,
         joiningGroup: replyData.body.joiningGroup,
@@ -51,10 +57,38 @@ async function doJob(data, appName_) {
       };
       appName = "user";
     }
+    if (replyData.nextQuery === "updateJoiningGroups") {
+      replyData.params = {
+        changedMemberType: replyData.body.changedMemberType,
+        changedNowPersonnel: replyData.body.changedNowPersonnel,
+        userId: replyData.body.userId,
+        joiningGroup: replyData.body.joiningGroup,
+        isJoiner: replyData.body.isJoiner,
+        addMode: !replyData.body.isJoiner,
+        status: replyData.body.status
+      };
+      appName = "user";
+    }
     if (replyData.nextQuery === "deleteGroupInUsers") {
       const group = replyData.body.group;
 
       replyData.params = { group };
+      appName = "user";
+    }
+    if (replyData.nextQuery === "modifyOwnGroupInfo") {
+      replyData.params = {
+        userId: replyData.body.userId,
+        studyGroup: replyData.body.ownGroup
+      };
+      appName = "user";
+    }
+    if (replyData.nextQuery === "modifyReservedInfo") {
+      replyData.params = {
+        leader: replyData.body.leader,
+        members: replyData.body.members,
+        groupId: replyData.body.groupId,
+        isReserved: replyData.body.isReserved
+      };
       appName = "user";
     }
   } catch (errReplyData) {

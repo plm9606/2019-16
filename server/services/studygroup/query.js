@@ -6,7 +6,7 @@ const {
 } = require("../../lib/redis/studygroup");
 const mongoose = require("mongoose");
 
-exports.addGroup = async params => {
+exports.addGroup = async (params) => {
   const groupInfo = params;
   const resultAfterStore = await StudyGroups.create(groupInfo);
 
@@ -21,7 +21,7 @@ exports.addGroup = async params => {
   };
 };
 
-exports.getGroupDetail = async params => {
+exports.getGroupDetail = async (params) => {
   const { id } = params;
   const findResult = await StudyGroups.findById(id);
 
@@ -29,7 +29,7 @@ exports.getGroupDetail = async params => {
   if (!findResult) return { status: 400 };
 };
 
-exports.removeGroup = async params => {
+exports.removeGroup = async (params) => {
   const { id } = params;
   const deletedGroupInfo = await StudyGroups.findByIdAndDelete(id);
 
@@ -38,7 +38,7 @@ exports.removeGroup = async params => {
   return { status: 200, group: deletedGroupInfo };
 };
 
-exports.updateGroup = async params => {
+exports.updateGroup = async (params) => {
   const groupData = params;
   const id = groupData._id;
 
@@ -49,17 +49,17 @@ exports.updateGroup = async params => {
 
   await updateStudyGroup(updatedGroupInfo);
 
-  return { status: 200, id };
+  return { status: 200, userId: id, ownGroup: updatedGroupInfo };
 };
 
-exports.toggleRegistration = async params => {
+exports.toggleRegistration = async (params) => {
   const { userId, groupId } = params;
   const groupInfo = await StudyGroups.findById(groupId);
   const members = groupInfo.members;
-  const isJoiner = members.some(m => m.id === userId);
+  const isJoiner = members.some((m) => m.id === userId);
 
   if (isJoiner) {
-    groupInfo.members = members.filter(m => m.id !== userId);
+    groupInfo.members = members.filter((m) => m.id !== userId);
     groupInfo.now_personnel--;
   }
   if (!isJoiner) {
@@ -78,7 +78,7 @@ exports.toggleRegistration = async params => {
   const changedMemberType = await groupInfo
     .save()
     .then(() => (isJoiner ? "searcher" : "joiner"))
-    .catch(err => {
+    .catch((err) => {
       throw new Error(err);
     });
 
@@ -94,7 +94,7 @@ exports.toggleRegistration = async params => {
   };
 };
 
-exports.toggleRecruitment = async params => {
+exports.toggleRecruitment = async (params) => {
   const { groupId } = params;
   const groupInfo = await StudyGroups.findById(groupId);
   const {
@@ -106,11 +106,12 @@ exports.toggleRecruitment = async params => {
   const isNotProperPersonnelWhenClosing =
     isRecruiting &&
     !(min_personnel <= now_personnel && now_personnel <= max_personnel);
+  const changedRecruitStatus = !groupInfo.isRecruiting;
 
   if (isNotProperPersonnelWhenClosing)
     return { status: 400, failReason: "인원이 충족되지 않았습니다." };
 
-  groupInfo.isRecruiting = !groupInfo.isRecruiting;
+  groupInfo.isRecruiting = changedRecruitStatus;
   return groupInfo
     .save()
     .then(async () => {
@@ -124,17 +125,44 @@ exports.toggleRecruitment = async params => {
 };
 
 exports.updateGroupReserved = async (params) => {
-  const { reservationId, studyGroupId } = params;
+  const { reservationId, studyGroupId, isReserved } = params;
   const query = {
     $set: {
-      isReserved: true,
+      isReserved,
       reservationId: mongoose.Types.ObjectId(reservationId._id)
     }
   };
-  const res = await StudyGroups.updateOne(
+
+  const res = await StudyGroups.findOneAndUpdate(
     { _id: mongoose.Types.ObjectId(studyGroupId) },
-    query
+    query,
+    { new: true }
   );
 
-  return { status: 200 };
+  const updatedGroup = res._doc;
+
+  return {
+    leader: updatedGroup.leader,
+    members: updatedGroup.members,
+    groupId: studyGroupId,
+    isReserved
+  };
+};
+
+exports.toggleReserved = async (params) => {
+  const { leader, members, groupId, isReserved } = params;
+  const groupInfo = await StudyGroups.findById(groupId);
+
+  groupInfo.isReserved = !groupInfo.isReserved;
+
+  return groupInfo
+    .save()
+    .then(async () => {
+      await updateStudyGroup(groupInfo);
+
+      return { leader, members, groupId, isReserved };
+    })
+    .catch((err) => {
+      throw new Error(err);
+    });
 };
