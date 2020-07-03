@@ -118,6 +118,10 @@ const Search = ({ location, match, history }) => {
 
   useEffect(() => {
     if (!lat || !lon) return;
+    setSearchState({
+      isLoading: true,
+      searchData: [],
+    });
     request("get", `/search/query/${query}/location/${lat}/${lon}/page/0/true`);
   }, [query, userLocation]);
 

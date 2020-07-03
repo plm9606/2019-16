@@ -52,6 +52,11 @@ const TagSearch = ({ location, match, history }) => {
   useEffect(() => {
     if (!lat || !lon) return;
 
+    setSearchState({
+      isLoading: true,
+      searchData: [],
+    });
+
     const data = {
       tags: [query],
       lat,
